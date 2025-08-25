@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# aitwintech
-Main Website for AI Twin Tech - KSA
-=======
 # AI Twin Tech Website
 
 React 19.1.1 website with video backgrounds and comprehensive icon system.
@@ -18,7 +14,7 @@ React 19.1.1 website with video backgrounds and comprehensive icon system.
 npm install
 npm run dev
 ```
-Open http://localhost:5173
+Open http://localhost:5170
 
 ## Tech Stack
 - React 19.1.1 + TypeScript
@@ -28,6 +24,5 @@ Open http://localhost:5173
 
 ## Products
 - **Josoor**: Digital Twin for Government
-- **SketchApp**: Visual Site Builder  
+- **SketchApp**: Visual Site Builder
 - **Aura**: AI Management System
->>>>>>> master

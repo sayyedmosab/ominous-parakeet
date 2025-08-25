@@ -7,6 +7,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Import Pages
 import HomePage from './pages/HomePage';
+// Import Architect app from workspace package
+import ArchitectLessonsPage from './pages/ArchitectLessonsPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import JosoorPage from './pages/josoor/JosoorPage';
@@ -21,6 +23,7 @@ import SketchAppPage from './pages/sketchapp/SketchAppPage';
 import SketchAppDesignerPage from './pages/sketchapp/SketchAppDesignerPage';
 import AuraPage from './pages/aura/AuraPage';
 import AuraProjectManagerPage from './pages/aura/AuraProjectManagerPage';
+import WeatherMapPage from './pages/WeatherMapPage';
 
 const AppLayout: React.FC = () => {
   return (
@@ -61,6 +64,9 @@ const App: React.FC = () => {
               </ProtectedRoute>
             } />
 
+            {/* Architect Lessons Integration */}
+            <Route path="/architect" element={<ArchitectLessonsPage />} />
+
             {/* Aura Routes */}
             <Route path="/aura" element={<AuraPage />} />
             <Route path="/aura/projectmanager" element={
@@ -68,6 +74,9 @@ const App: React.FC = () => {
                 <AuraProjectManagerPage />
               </ProtectedRoute>
             } />
+
+            {/* Weather Map Route */}
+            <Route path="/weathermap" element={<WeatherMapPage />} />
 
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

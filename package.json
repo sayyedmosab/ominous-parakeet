@@ -1,7 +1,12 @@
 {
   "name": "twintech-monorepo",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.2.1"
+  }
 }

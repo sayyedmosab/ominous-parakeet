@@ -7,7 +7,7 @@ import { visionBackgroundImage } from '../assets/imageData';
 import { PenTool, Wand2, ArrowRight, Sparkles, Users, Zap } from 'lucide-react';
 
 const ImageTextSection: React.FC<{
-  heading: string;
+  heading: string | React.ReactNode;
   content: string;
   buttonText: string;
   imageUrl: string;
@@ -26,8 +26,8 @@ const ImageTextSection: React.FC<{
             {buttonText}
           </a>
         </div>
-        <div className={imageOrder}>
-          <img src={imageUrl} alt={heading} className="rounded-lg shadow-xl w-full h-auto object-cover" />
+        <div className={`${imageOrder} flex flex-col`}>
+          <img src={imageUrl} alt={typeof heading === 'string' ? heading : 'Product image'} className="rounded-lg shadow-xl w-[70%] h-auto object-cover mx-auto mb-[-4px]" />
         </div>
       </div>
     </div>
@@ -78,18 +78,84 @@ const HomePage: React.FC = () => {
         </div>
       </Frame>
       
-      <Frame layout="horizontal" gap="0" justify="start" align="stretch" padding="1" isSticky="false" width="full" bgColor="white" border="true" shadow="sm">
-        <ImageTextSection
-            heading="Josoor (New)"
-            content="Our flagship product to transform Strategy Execution through a Digital Twin of a Government Organization"
-            buttonText="Learn More"
-            imageUrl="https://picsum.photos/600/400"
-            imagePosition="right"
-        />
+      <Frame layout="horizontal" gap="0" justify="start" align="stretch" padding="1" isSticky="false" width="full" bgColor="white" border="true" shadow="sm" className="h-[450px] px-1 py-0">
+        <div className="container mx-auto py-0 px-4 flex flex-row justify-center items-center">
+          <div className="flex gap-6 flex-row justify-center items-center">
+            <div className="flex flex-col justify-center order-1">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                <strong>Josoor </strong>
+                <span>
+                  <sup style={{ position: 'relative', top: '-11.25px' }}>
+                    <span style={{ fontSize: '18.5px', color: 'rgb(208, 2, 27)', fontWeight: '700' }}>
+                      (New)
+                    </span>
+                  </sup>
+                </span>
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                <p style={{ whiteSpaceCollapse: 'preserve' }}></p>
+                <span style={{ fontSize: '21px' }}>
+                  <span style={{ fontSize: '35px' }}>
+                    <span style={{ fontSize: '56px' }}>
+                      <span style={{ fontSize: '61px' }}>
+                        <span style={{ fontSize: '63px' }}>
+                          <span style={{ fontSize: '22px' }}>
+                            <span style={{ fontSize: '67px' }}>
+                              <span style={{ fontSize: '66px' }}>
+                                <span style={{ fontSize: '66px' }}>
+                                  <span>
+                                    <span style={{ fontSize: '24px' }}>
+                                      <span>
+                                        <span style={{ fontSize: '24px' }}>
+                                          <span>
+                                            <b>
+                                              <p style={{ whiteSpaceCollapse: 'preserve' }}>
+                                                <span style={{ fontSize: '20px' }}>
+                                                  Our flagship product, transforming strategy execution in government organizations through a comprehensive Digital Twin
+                                                </span>
+                                              </p>
+                                              <p style={{ whiteSpaceCollapse: 'preserve' }}></p>
+                                              <p style={{ whiteSpaceCollapse: 'preserve' }}></p>
+                                            </b>
+                                          </span>
+                                        </span>
+                                      </span>
+                                    </span>
+                                  </span>
+                                </span>
+                              </span>
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+                <p style={{ whiteSpaceCollapse: 'preserve' }}>
+                  Josoor, meaning 'bridges' in Arabic, embodies the core idea of bridging strategy to execution. As the design evolved, it became clear that a single bridge isn't enough—multiple Josoor are essential, varying in scale, purpose, and complexity. These bridges form the heart of our platform, enabling a dynamic digital twin that mirrors and optimizes your organization's operations.
+                </p>
+              </p>
+              <a href="#/josoor" className="w-auto self-start px-6 py-3 bg-electric-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-electric-blue-700 transition-all duration-300">
+                Learn More
+              </a>
+            </div>
+            <div className="flex flex-col font-light order-2 justify-center leading-[10px]">
+              <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
+                <div className="flex flex-col leading-normal w-full ml-0 max-md:w-full max-md:ml-0">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets%2Fdcb6338cd56942dd9d0d7f3bbd865659%2Fda7626f191304239852921d874541180"
+                    alt="Product image"
+                    className="rounded-lg shadow-xl w-auto h-auto object-cover mx-auto my-[77px]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Frame>
       
       <Frame layout="horizontal" gap="0" justify="start" align="stretch" padding="0" isSticky="false" width="full" bgColor="white" border="true" shadow="sm">
-        <div className="container mx-auto py-16 px-4">
+        <div className="container mx-auto py-0 px-4 flex flex-row justify-center items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {products.map(card => {
               const IconComponent = card.icon;

@@ -36,12 +36,14 @@ const JosoorPage: React.FC = () => {
           align="center"
         />
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
+        <div className="container mx-auto py-16 pr-1 space-y-12">
             <TextBlock
                 heading="eXplore"
                 content="Explore the Digital Twin Model anatomy and how it is designed. This covers the Knowledge domains used, the Data Ontology, the Database Model"
                 maxWidth="full"
                 icon={Search}
+                darkTheme={true}
+                flexLayout={true}
             />
             <Frame layout="horizontal" gap="4" justify="start" align="stretch" padding="6" width="full" bgColor="gray-50" border="true" shadow="sm" className="rounded-lg grid grid-cols-1 md:grid-cols-2">
                 <TextBlock
@@ -66,6 +68,8 @@ Beyond just data, an Enterprise-grade database architecture that is Context-driv
                 content="With a Digital Twin, everything appears the same, yet everything is different. To illustrate, experience 3 powerful interfaces to your transformation."
                 maxWidth="full"
                 icon={Eye}
+                darkTheme={true}
+                flexLayout={true}
             />
             <Frame layout="horizontal" gap="4" justify="start" align="stretch" padding="6" width="full" bgColor="gray-50" border="true" shadow="sm" className="rounded-lg grid grid-cols-1 md:grid-cols-2">
                  <TextBlock
@@ -88,6 +92,9 @@ We cover 2 of our favorites here`}
                 content="Our clear, phased approach to digital twin implementation demystifies the journey and its possibilities. Follow our roadmap to get your first use case live in just 90 days."
                 maxWidth="full"
                 icon={Play}
+                darkTheme={true}
+                flexLayout={true}
+                headingComponent={<span style={{ color: 'rgb(255, 255, 255)' }}>eXecute</span>}
             />
              <Frame layout="horizontal" gap="4" justify="start" align="stretch" padding="6" width="full" bgColor="gray-50" border="true" shadow="sm" className="rounded-lg grid grid-cols-1 md:grid-cols-2">
                  <TextBlock

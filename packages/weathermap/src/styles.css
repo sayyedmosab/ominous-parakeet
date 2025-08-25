@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* --- DARK THEME (DEFAULT) --- */
+  /* This file provides the default theme for the component. */
+  /* To override, define these variables in your own stylesheet. */
+
+  /* Background Colors */
+  --heatmap-bg-primary: #111827; /* Tailwind gray-900 */
+  --heatmap-bg-secondary: #1f2937; /* Tailwind gray-800 */
+  --heatmap-bg-tertiary: #374151; /* Tailwind gray-700 */
+  --heatmap-bg-hover: #4b5563; /* Tailwind gray-600 */
+  --heatmap-bg-popup-overlay: rgba(17, 24, 39, 0.8);
+  --heatmap-bg-popup-header: #1f2937;
+  --heatmap-bg-popup-body: #111827;
+
+  /* Text Colors */
+  --heatmap-text-primary: #f9fafb; /* Tailwind gray-50 */
+  --heatmap-text-secondary: #d1d5db; /* Tailwind gray-300 */
+  --heatmap-text-muted: #9ca3af; /* Tailwind gray-400 */
+  --heatmap-text-button: #ffffff;
+  --heatmap-text-accent: #38bdf8; /* Tailwind sky-400 */
+
+  /* Border Colors */
+  --heatmap-border-primary: #374151; /* Tailwind gray-700 */
+  --heatmap-border-secondary: #4b5563; /* Tailwind gray-600 */
+  --heatmap-border-dashed: #4b5563; /* Tailwind gray-600 */
+  
+  /* Accent Colors */
+  --heatmap-accent-primary: #38bdf8; /* Tailwind sky-400 */
+  --heatmap-accent-hover: #0ea5e9; /* Tailwind sky-500 */
+  --heatmap-accent-focus-ring: #0ea5e9; /* Tailwind sky-500 */
+  --heatmap-accent-disabled: #374151; /* Tailwind gray-700 */
+
+  /* RAG Status Colors */
+  --heatmap-rag-green: #22c55e; /* Tailwind green-500 */
+  --heatmap-rag-amber: #f97316; /* Tailwind orange-500 */
+  --heatmap-rag-red: #ef4444; /* Tailwind red-500 */
+
+  /* Spider Chart Colors */
+  --heatmap-spider-web-color: #4b5563; /* Tailwind gray-600 */
+  --heatmap-spider-axis-color: #6b7280; /* Tailwind gray-500 */
+  --heatmap-spider-label-color: #d1d5db; /* Tailwind gray-300 */
+  --heatmap-spider-shape-fill: rgba(56, 189, 248, 0.2); /* sky-400 with opacity */
+  --heatmap-spider-shape-stroke: #38bdf8; /* Tailwind sky-400 */
+}
+
+/* Basic layout styles for the app container */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: var(--heatmap-bg-primary);
+  color: var(--heatmap-text-primary);
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--heatmap-accent-primary);
+  color: var(--heatmap-text-button);
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: var(--heatmap-accent-disabled);
+  cursor: not-allowed;
+}

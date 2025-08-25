@@ -1,0 +1,46 @@
+{
+  "overlays": [
+    {
+      "id": "staffNeeds",
+      "label": "Staff Needs",
+      "unit": "%",
+      "icon": "StaffIcon"
+    },
+    {
+      "id": "itTools",
+      "label": "IT Tools",
+      "unit": "%",
+      "icon": "ToolsIcon"
+    },
+    {
+      "id": "processDocumentation",
+      "label": "Process Docs",
+      "unit": "%",
+      "icon": "DocsIcon"
+    },
+    {
+      "id": "teamHealth",
+      "label": "Team Health",
+      "unit": "%",
+      "icon": "HealthIcon"
+    },
+    {
+      "id": "resistanceLevel",
+      "label": "Resistance Level",
+      "unit": "%",
+      "icon": "ResistanceIcon"
+    },
+    {
+      "id": "budgetAllocated",
+      "label": "Budget",
+      "unit": "k",
+      "icon": "BudgetIcon"
+    },
+    {
+      "id": "highRisks",
+      "label": "High Risks",
+      "unit": " count",
+      "icon": "RiskIcon"
+    }
+  ]
+}

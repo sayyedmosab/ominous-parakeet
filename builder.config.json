@@ -1,0 +1,6 @@
+{
+  "command": "cd packages/main && npm run dev",
+  "serverUrl": " http://localhost:5170",
+  "authenticateProxy": false,
+  "commitMode": "commits"
+}

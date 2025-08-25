@@ -15,11 +15,13 @@ import {
   Home,
   BookOpen,
   PenTool,
-  Wand2
+  Wand2,
+  Cloud
 } from "lucide-react";
 
 const navLinks: NavLinkType[] = [
   { id: 1, text: 'Home', href: '/', icon: Home },
+  { id: 'architect', text: 'Architect Lessons', href: '/architect', icon: BookOpen },
   {
     id: 2,
     text: 'Josoor',
@@ -49,6 +51,7 @@ const navLinks: NavLinkType[] = [
     icon: Wand2,
     subLinks: [{ id: 'a1', text: 'Project Manager', href: '/aura/projectmanager', icon: User }],
   },
+  { id: 'weathermap', text: 'Weather Map', href: '/weathermap', icon: Cloud },
 ];
 
 const Header: React.FC = () => {
@@ -66,6 +69,7 @@ const Header: React.FC = () => {
   const isJosoorPage = pathname.startsWith('/josoor');
   const isSketchAppPage = pathname.startsWith('/sketchapp');
   const isAuraPage = pathname.startsWith('/aura');
+  const isWeatherMapPage = pathname.startsWith('/weathermap');
   
   let logoSrc = '/images/aittlogo.png';
   let logoAlt = 'AI Twin Tech';
@@ -79,6 +83,9 @@ const Header: React.FC = () => {
   } else if (isAuraPage) {
     logoSrc = '/images/auralogonotext.png';
     logoAlt = 'Aura';
+  } else if (isWeatherMapPage) {
+    logoSrc = '/images/josoorlogo.png';
+    logoAlt = 'Weather Map';
   }
 
   return (
