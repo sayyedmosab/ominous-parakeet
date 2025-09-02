@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page - React Components</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module">
+        import React from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { BrowserRouter as Router } from 'react-router-dom';
+        import SimpleTestPage from './SimpleTestPage.tsx';
+        import { AuthProvider } from '../context/AuthContext.tsx';
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            React.createElement(AuthProvider, null,
+                React.createElement(Router, null,
+                    React.createElement(SimpleTestPage)
+                )
+            )
+        );
+    </script>
+</body>
+</html>

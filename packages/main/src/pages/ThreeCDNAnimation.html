@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Three.js CDN Animation (Orbit + Bloom)</title>
+  <style>
+    html, body { height: 100%; margin: 0; background: #0b1020; color: #e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+    .wrap { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr auto; }
+    header, footer { padding: 12px 16px; background: #0a0f1c; border-bottom: 1px solid #111827; }
+    footer { border-top: 1px solid #111827; border-bottom: none; }
+    #stage { position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 50% 30%, #141b2f 0%, #0b1020 60%, #070b16 100%); }
+    #info { position: absolute; top: 12px; left: 12px; background: rgba(0, 0, 0, 0.35); padding: 8px 10px; border-radius: 8px; font-size: 12px; backdrop-filter: blur(4px); }
+    .metrics { position: absolute; bottom: 12px; left: 12px; font-size: 12px; opacity: 0.8; }
+    .btn { appearance: none; border: 1px solid #374151; background: #0f172a; color: #e5e7eb; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn:hover { background: #111827; }
+    .toolbar { display: flex; gap: 8px; align-items: center; }
+  </style>
+
+  <!-- map the baare specifier 'three' to the CDN module -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+  <!-- map the bare specifier 'three' to the CDN module -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="toolbar">
+        <button id="reset" class="btn">Reset Camera</button>
+        <button id="toggleBloom" class="btn">Toggle Bloom</button>
+        <span style="opacity:.7">Three.js @ 0.160.0 via unpkg</span>
+      </div>
+    </header>
+    <main id="stage"></main>
+    <footer>
+      CDN: three, OrbitControls, EffectComposer, RenderPass, UnrealBloomPass
+    </footer>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+    const container = document.getElementById('stage');
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(container.clientWidth || window.innerWidth, container.clientHeight || window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      (container.clientWidth || window.innerWidth) / (container.clientHeight || window.innerHeight),
+      0.1,
+      200
+    );
+    camera.position.set(6, 4, 10);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.minDistance = 3;
+    controls.maxDistance = 30;
+
+    // Lights
+    const hemi = new THREE.HemisphereLight(0x88aaff, 0x101018, 0.8);
+    scene.add(hemi);
+
+    const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+    dir.position.set(5, 10, 7);
+    dir.castShadow = true;
+    scene.add(dir);
+
+    // Objects
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const mat = new THREE.MeshStandardMaterial({ color: 0x65b2ff, roughness: 0.2, metalness: 0.7 });
+
+    const torus = new THREE.Mesh(new THREE.TorusKnotGeometry(1.2, 0.4, 256, 40), mat);
+    torus.castShadow = true;
+    torus.receiveShadow = true;
+    group.add(torus);
+
+    const wireMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.2 });
+    const wire = new THREE.Mesh(new THREE.IcosahedronGeometry(4.5, 1), wireMat);
+    group.add(wire);
+
+    // Stars background
+    const stars = new THREE.Group();
+    const starGeo = new THREE.IcosahedronGeometry(0.05, 0);
+    const starMat = new THREE.MeshBasicMaterial({ color: 0x99ccff });
+    for (let i = 0; i < 600; i++) {
+      const m = new THREE.Mesh(starGeo, starMat);
+      m.position.set((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
+      stars.add(m);
+    }
+    scene.add(stars);
+
+    // Postprocessing
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(renderer.domElement.width, renderer.domElement.height),
+      1.1,   // strength
+      0.9,   // radius
+      0.2    // threshold
+    );
+    composer.addPass(bloomPass);
+
+    // UI controls
+    const toggleBloomBtn = document.getElementById('toggleBloom');
+    let bloomEnabled = true;
+    toggleBloomBtn.addEventListener('click', () => {
+      bloomEnabled = !bloomEnabled;
+      bloomPass.enabled = bloomEnabled;
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      camera.position.set(6, 4, 10);
+      controls.target.set(0, 0, 0);
+      controls.update();
+    });
+
+    // Info overlay
+    const info = document.createElement('div');
+    info.id = 'info';
+    info.textContent = 'Drag to orbit • Scroll to zoom • Shift+Drag to pan';
+    container.appendChild(info);
+
+    // Resize handling
+    function onResize() {
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight - 96; // account for header/footer
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      composer.setSize(w, h);
+    }
+
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    // Animation loop
+    const clock = new THREE.Clock();
+    function animate() {
+      const t = clock.getElapsedTime();
+      torus.rotation.x = t * 0.35;
+      torus.rotation.y = t * 0.25;
+      wire.rotation.y = -t * 0.05;
+      controls.update();
+
+      if (bloomEnabled) {
+        composer.render();
+      } else {
+        renderer.render(scene, camera);
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>

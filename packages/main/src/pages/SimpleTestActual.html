@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Page - Actual HTML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/index.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .middle-frame {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ACTUAL HEADER HTML FROM LIVE SITE -->
+        <header class="shadow-md sticky top-0 z-50 text-white" style="background-color: rgb(0, 18, 45);"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-20"><a class="flex items-center" href="#/" data-discover="true"><img alt="AI Twin Tech" class="h-12 w-auto" src="/images/aittlogo.png"></a><div class="hidden md:flex items-center space-x-8"><nav class="flex items-center space-x-6"><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-electric-blue-400 font-semibold" href="#/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house w-4 h-4" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Home</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/about" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open w-4 h-4" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>About</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/roadmap" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target w-4 h-4" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>Roadmap</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/forum" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square w-4 h-4" aria-hidden="true"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path></svg>Architect's Forum</a></div></nav><div class="flex items-center space-x-4"><button class="flex items-center gap-1 px-3 py-1.5 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 text-sm">EN</button></div></div><div class="md:hidden"><button class="text-gray-200 focus:outline-none"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-6 h-6" aria-hidden="true"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg></button></div></div></div></header>
+
+        <!-- MIDDLE FRAME - Scrollable Content -->
+        <div class="middle-frame">
+            <h2>MIDDLE FRAME - Flexible Height with Scroll</h2>
+            <div class="content">
+Middle Frame - Line 1
+Middle Frame - Line 2
+Middle Frame - Line 3
+Middle Frame - Line 4
+Middle Frame - Line 5
+Middle Frame - Line 6
+Middle Frame - Line 7
+Middle Frame - Line 8
+Middle Frame - Line 9
+Middle Frame - Line 10
+Middle Frame - Line 11
+Middle Frame - Line 12
+Middle Frame - Line 13
+Middle Frame - Line 14
+Middle Frame - Line 15
+Middle Frame - Line 16
+Middle Frame - Line 17
+Middle Frame - Line 18
+Middle Frame - Line 19
+Middle Frame - Line 20
+Middle Frame - Line 21
+Middle Frame - Line 22
+Middle Frame - Line 23
+Middle Frame - Line 24
+Middle Frame - Line 25
+Middle Frame - Line 26
+Middle Frame - Line 27
+Middle Frame - Line 28
+Middle Frame - Line 29
+Middle Frame - Line 30
+Middle Frame - Line 31
+Middle Frame - Line 32
+Middle Frame - Line 33
+Middle Frame - Line 34
+Middle Frame - Line 35
+Middle Frame - Line 36
+Middle Frame - Line 37
+Middle Frame - Line 38
+Middle Frame - Line 39
+Middle Frame - Line 40
+Middle Frame - Line 41
+Middle Frame - Line 42
+Middle Frame - Line 43
+Middle Frame - Line 44
+Middle Frame - Line 45
+Middle Frame - Line 46
+Middle Frame - Line 47
+Middle Frame - Line 48
+Middle Frame - Line 49
+Middle Frame - Line 50
+Middle Frame - Line 51
+Middle Frame - Line 52
+Middle Frame - Line 53
+Middle Frame - Line 54
+Middle Frame - Line 55
+Middle Frame - Line 56
+Middle Frame - Line 57
+Middle Frame - Line 58
+Middle Frame - Line 59
+Middle Frame - Line 60
+Middle Frame - Line 61
+Middle Frame - Line 62
+Middle Frame - Line 63
+Middle Frame - Line 64
+Middle Frame - Line 65
+Middle Frame - Line 66
+Middle Frame - Line 67
+Middle Frame - Line 68
+Middle Frame - Line 69
+Middle Frame - Line 70
+Middle Frame - Line 71
+Middle Frame - Line 72
+Middle Frame - Line 73
+Middle Frame - Line 74
+Middle Frame - Line 75
+Middle Frame - Line 76
+Middle Frame - Line 77
+Middle Frame - Line 78
+Middle Frame - Line 79
+Middle Frame - Line 80
+Middle Frame - Line 81
+Middle Frame - Line 82
+Middle Frame - Line 83
+Middle Frame - Line 84
+Middle Frame - Line 85
+Middle Frame - Line 86
+Middle Frame - Line 87
+Middle Frame - Line 88
+Middle Frame - Line 89
+Middle Frame - Line 90
+Middle Frame - Line 91
+Middle Frame - Line 92
+Middle Frame - Line 93
+Middle Frame - Line 94
+Middle Frame - Line 95
+Middle Frame - Line 96
+Middle Frame - Line 97
+Middle Frame - Line 98
+Middle Frame - Line 99
+Middle Frame - Line 100
+Middle Frame - Line 101
+Middle Frame - Line 102
+Middle Frame - Line 103
+Middle Frame - Line 104
+Middle Frame - Line 105
+Middle Frame - Line 106
+Middle Frame - Line 107
+Middle Frame - Line 108
+Middle Frame - Line 109
+Middle Frame - Line 110
+Middle Frame - Line 111
+Middle Frame - Line 112
+Middle Frame - Line 113
+Middle Frame - Line 114
+Middle Frame - Line 115
+Middle Frame - Line 116
+Middle Frame - Line 117
+Middle Frame - Line 118
+Middle Frame - Line 119
+Middle Frame - Line 120
+Middle Frame - Line 121
+Middle Frame - Line 122
+Middle Frame - Line 123
+Middle Frame - Line 124
+Middle Frame - Line 125
+Middle Frame - Line 126
+Middle Frame - Line 127
+Middle Frame - Line 128
+Middle Frame - Line 129
+Middle Frame - Line 130
+Middle Frame - Line 131
+Middle Frame - Line 132
+Middle Frame - Line 133
+Middle Frame - Line 134
+Middle Frame - Line 135
+Middle Frame - Line 136
+Middle Frame - Line 137
+Middle Frame - Line 138
+Middle Frame - Line 139
+Middle Frame - Line 140
+Middle Frame - Line 141
+Middle Frame - Line 142
+Middle Frame - Line 143
+Middle Frame - Line 144
+Middle Frame - Line 145
+Middle Frame - Line 146
+Middle Frame - Line 147
+Middle Frame - Line 148
+Middle Frame - Line 149
+Middle Frame - Line 150
+Middle Frame - Line 151
+Middle Frame - Line 152
+Middle Frame - Line 153
+Middle Frame - Line 154
+Middle Frame - Line 155
+Middle Frame - Line 156
+Middle Frame - Line 157
+Middle Frame - Line 158
+Middle Frame - Line 159
+Middle Frame - Line 160
+Middle Frame - Line 161
+Middle Frame - Line 162
+Middle Frame - Line 163
+Middle Frame - Line 164
+Middle Frame - Line 165
+Middle Frame - Line 166
+Middle Frame - Line 167
+Middle Frame - Line 168
+Middle Frame - Line 169
+Middle Frame - Line 170
+Middle Frame - Line 171
+Middle Frame - Line 172
+Middle Frame - Line 173
+Middle Frame - Line 174
+Middle Frame - Line 175
+Middle Frame - Line 176
+Middle Frame - Line 177
+Middle Frame - Line 178
+Middle Frame - Line 179
+Middle Frame - Line 180
+Middle Frame - Line 181
+Middle Frame - Line 182
+Middle Frame - Line 183
+Middle Frame - Line 184
+Middle Frame - Line 185
+Middle Frame - Line 186
+Middle Frame - Line 187
+Middle Frame - Line 188
+Middle Frame - Line 189
+Middle Frame - Line 190
+Middle Frame - Line 191
+Middle Frame - Line 192
+Middle Frame - Line 193
+Middle Frame - Line 194
+Middle Frame - Line 195
+Middle Frame - Line 196
+Middle Frame - Line 197
+Middle Frame - Line 198
+Middle Frame - Line 199
+Middle Frame - Line 200
+            </div>
+        </div>
+
+        <!-- ACTUAL FOOTER HTML FROM LIVE SITE -->
+        <footer class="bg-gray-800 text-white mt-auto"><div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6"><div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left"><p class="text-gray-400 text-sm mb-4 md:mb-0 flex items-center gap-1">© 2025 AI Twin Tech. All rights reserved. - Built with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart w-4 h-4 text-red-500" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg> by SketchApp.</p><div class="flex items-center"><a href="#" class="flex items-center gap-2 text-white font-semibold hover:text-electric-blue-400 transition-colors duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle w-5 h-5" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg>Let's Chat (Introvert Friendly)</a></div></div></div></footer>
+    </div>
+</body>
+</html>
