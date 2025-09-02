@@ -1,3 +1,0 @@
-// ...existing code from geminiService.ts...
-
-// This file has been stashed as it is not used by the active webapp sections.

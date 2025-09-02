@@ -28,5 +28,12 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "public/3danimation/**/*",
+    "stash/**/*",
+    "documentation/**/*",
+    "**/*.backup.*",
+    "**/*.mock.*"
+  ]
 }
