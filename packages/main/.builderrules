@@ -1,0 +1,5 @@
+NONE OF THE BELOW ARE OPTIONAL
+1- Always make sure your work is planned using Notion.
+2- when you exceed one iteration of the code written not producing the expected output, expand your scope beyond the local code snippet tot he broader codebase. If that does not work consult Context 7. 
+3- Make sure any detours and deviations due to bugs or errors or other reasons from the main plan in Notion is also documented in Notion as a branch from the main plan to avoid drifting.
+4- The main page has a sophisticated animation sequence. The details are documented inline. This documentaiton inline needs to be maintained. When a change is made, add versioned comments of the change to be able to revert back if needed. THIS IS NOT OPTIONAL

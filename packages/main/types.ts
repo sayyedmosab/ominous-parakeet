@@ -32,5 +32,7 @@ export interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   register: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  loginWithGoogle: () => Promise<{ error: AuthError | null }>;
+  loginWithApple: () => Promise<{ error: AuthError | null }>;
   logout: () => Promise<{ error: AuthError | null }>;
 }

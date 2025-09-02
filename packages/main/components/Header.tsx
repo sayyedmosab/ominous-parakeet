@@ -16,42 +16,16 @@ import {
   BookOpen,
   PenTool,
   Wand2,
-  Cloud
+  Cloud,
+  Target,
+  MessageSquare
 } from "lucide-react";
 
 const navLinks: NavLinkType[] = [
   { id: 1, text: 'Home', href: '/', icon: Home },
-  { id: 'architect', text: 'Architect Lessons', href: '/architect', icon: BookOpen },
-  {
-    id: 2,
-    text: 'Josoor',
-    href: '/josoor',
-    icon: Building2,
-    subLinks: [
-      { id: 'j-vision', text: "Founder's Letter", href: '/josoor/vision', icon: BookOpen },
-      { id: 'j-explore-architect', text: 'eXplore Architecture', href: '/josoor/explore/architect', icon: Search },
-      { id: 'j-explore-systems', text: 'eXplore System', href: '/josoor/explore/systems', icon: Search },
-      { id: 'j-experience-noor', text: 'eXperience Noor', href: '/josoor/experience/noor', icon: Eye },
-      { id: 'j-experience-analytics', text: 'eXperience Analytics', href: '/josoor/experience/analytics', icon: Eye },
-      { id: 'j-execute-ucs', text: 'eXecute Library', href: '/josoor/execute/use-cases', icon: Play },
-      { id: 'j-execute-journey', text: 'eXecute UC001', href: '/josoor/execute/journey', icon: Play },
-    ],
-  },
-  {
-    id: 3,
-    text: 'SketchApp',
-    href: '/sketchapp',
-    icon: PenTool,
-    subLinks: [{ id: 's1', text: 'Designer', href: '/sketchapp/designer', icon: Sparkles }],
-  },
-  {
-    id: 1755004664346,
-    text: 'Aura',
-    href: '/aura',
-    icon: Wand2,
-    subLinks: [{ id: 'a1', text: 'Project Manager', href: '/aura/projectmanager', icon: User }],
-  },
-  { id: 'weathermap', text: 'Weather Map', href: '/weathermap', icon: Cloud },
+  { id: 2, text: 'About', href: '/about', icon: BookOpen },
+  { id: 3, text: 'Roadmap', href: '/roadmap', icon: Target },
+  { id: 4, text: 'The Deep', href: '/forum', icon: MessageSquare },
 ];
 
 const Header: React.FC = () => {
@@ -59,6 +33,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [language, setLanguage] = useState<'EN' | 'AR'>('EN');
 
   const handleLogout = async () => {
     await logout();
@@ -141,6 +116,13 @@ const Header: React.FC = () => {
               })}
             </nav>
             <div className="flex items-center space-x-4">
+              {/* Language Toggle */}
+              <button
+                onClick={() => setLanguage(language === 'EN' ? 'AR' : 'EN')}
+                className="flex items-center gap-1 px-3 py-1.5 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 text-sm"
+              >
+                {language}
+              </button>
               {user && (
                 <button
                   onClick={handleLogout}
@@ -197,6 +179,13 @@ const Header: React.FC = () => {
             })}
           </nav>
           <div className="flex flex-col items-center space-y-4 mt-6">
+            {/* Mobile Language Toggle */}
+            <button
+              onClick={() => setLanguage(language === 'EN' ? 'AR' : 'EN')}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300"
+            >
+              {language === 'EN' ? 'العربية' : 'English'}
+            </button>
             {user && (
               <button
                 onClick={() => {

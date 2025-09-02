@@ -1,0 +1,247 @@
+import React, { useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import DiscussionForum from '../components/DiscussionForum';
+
+// Generate dummy text for testing
+const generateDummyText = (frameName: string, count: number = 200) => {
+  const lines = [];
+  for (let i = 1; i <= count; i++) {
+    lines.push(`${frameName} - Line ${i}`);
+  }
+  return lines.join('\n');
+};
+
+// Mock data for DiscussionForum
+const mockComments = [
+  {
+    id: '1',
+    user: 'architect@example.com',
+    text: 'Great episode! The concepts really resonate with my experience in sustainable design.',
+    timestamp: new Date(Date.now() - 3600000),
+    likes: 5,
+    replies: [
+      {
+        id: '1-1',
+        user: 'student@example.com',
+        text: 'Agreed! The modular approach is brilliant.',
+        timestamp: new Date(Date.now() - 1800000),
+        likes: 2
+      }
+    ]
+  },
+  {
+    id: '2',
+    user: 'designer@example.com',
+    text: 'How do you handle client feedback during the conceptual phase?',
+    timestamp: new Date(Date.now() - 7200000),
+    likes: 3
+  }
+];
+
+const mockUser = { id: '1', email: 'test@example.com' };
+
+const SimpleTestPage: React.FC = () => {
+  // State for DiscussionForum
+  const [comments, setComments] = useState(mockComments);
+  const [newComment, setNewComment] = useState('');
+  const [user] = useState(mockUser);
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState('');
+  const [showModeration, setShowModeration] = useState(false);
+
+  // Handlers for DiscussionForum
+  const handleCommentSubmit = () => {
+    if (newComment.trim()) {
+      const comment = {
+        id: Date.now().toString(),
+        user: user.email,
+        text: newComment,
+        timestamp: new Date(),
+        likes: 0,
+        replies: []
+      };
+      setComments([...comments, comment]);
+      setNewComment('');
+    }
+  };
+
+  const handleReplySubmit = (commentId: string) => {
+    if (replyText.trim()) {
+      const reply = {
+        id: `${commentId}-${Date.now()}`,
+        user: user.email,
+        text: replyText,
+        timestamp: new Date(),
+        likes: 0
+      };
+
+      setComments(comments.map(comment =>
+        comment.id === commentId
+          ? { ...comment, replies: [...(comment.replies || []), reply] }
+          : comment
+      ));
+      setReplyText('');
+      setReplyingTo(null);
+    }
+  };
+
+  const handleLikeComment = (commentId: string, isReply?: boolean, parentId?: string) => {
+    if (isReply && parentId) {
+      setComments(comments.map(comment =>
+        comment.id === parentId
+          ? {
+              ...comment,
+              replies: comment.replies?.map(reply =>
+                reply.id === commentId
+                  ? { ...reply, likes: reply.likes + 1 }
+                  : reply
+              ) || []
+            }
+          : comment
+      ));
+    } else {
+      setComments(comments.map(comment =>
+        comment.id === commentId
+          ? { ...comment, likes: comment.likes + 1 }
+          : comment
+      ));
+    }
+  };
+
+  const handleReportComment = (commentId: string, isReply?: boolean, parentId?: string) => {
+    // Simple report functionality
+    console.log('Reported comment:', commentId);
+  };
+
+  const handleModerateComment = (commentId: string, action: 'approve' | 'remove', isReply?: boolean, parentId?: string) => {
+    // Simple moderation functionality
+    console.log('Moderated comment:', commentId, action);
+  };
+
+  return (
+    <div style={{
+      height: '100vh',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      margin: 0,
+      padding: 0
+    }}>
+      {/* Actual Header Component */}
+      <Header />
+
+      {/* Main Content Area - 3 Frame Horizontal Layout */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'hidden'
+      }}>
+        {/* Frame 1.0 - Left Panel (20%) */}
+        <div style={{
+          width: '20%',
+          height: '100%',
+          backgroundColor: '#f8f9fa',
+          borderRight: '2px solid #dee2e6',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '10px',
+          boxSizing: 'border-box'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Frame 1.0 - Episodes List</h3>
+          <div style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            lineHeight: '1.4'
+          }}>
+            {generateDummyText('Frame 1.0 - Episodes List')}
+          </div>
+        </div>
+
+        {/* Frame 2.0 - Middle Panel (60%) */}
+        <div style={{
+          width: '60%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}>
+          {/* Frame 2.1 - Top Section (10% of middle panel) */}
+          <div style={{
+            height: '10%',
+            backgroundColor: '#e9ecef',
+            borderBottom: '2px solid #dee2e6',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            padding: '8px',
+            boxSizing: 'border-box',
+            flexShrink: 0
+          }}>
+            <h4 style={{ margin: '0 0 5px 0', color: '#333', fontSize: '14px' }}>Frame 2.1 - Supporting Content</h4>
+            <div style={{
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              fontFamily: 'monospace',
+              fontSize: '11px',
+              lineHeight: '1.3'
+            }}>
+              {generateDummyText('Frame 2.1 - Supporting Content', 50)}
+            </div>
+          </div>
+
+          {/* Frame 2.2 - Bottom Section (90% of middle panel) */}
+          <div style={{
+            height: '90%',
+            backgroundColor: '#ffffff',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            padding: '10px',
+            boxSizing: 'border-box',
+            flex: 1
+          }}>
+            <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>Frame 2.2 - Episode Content</h4>
+            <div style={{
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              fontFamily: 'monospace',
+              fontSize: '12px',
+              lineHeight: '1.4'
+            }}>
+              {generateDummyText('Frame 2.2 - Episode Content')}
+            </div>
+          </div>
+        </div>
+
+        {/* Frame 3.0 - Right Panel (20%) */}
+        <div style={{
+          width: '20%',
+          height: '100%',
+          backgroundColor: '#f8f9fa',
+          borderLeft: '2px solid #dee2e6',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '10px',
+          boxSizing: 'border-box'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>Frame 3.0 - Discussion Forum</h3>
+          <div style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            fontFamily: 'monospace',
+            fontSize: '12px',
+            lineHeight: '1.4'
+          }}>
+            {generateDummyText('Frame 3.0 - Discussion Forum')}
+          </div>
+        </div>
+      </div>
+
+      {/* Actual Footer Component */}
+      <Footer />
+    </div>
+  );
+};
+
+export default SimpleTestPage;

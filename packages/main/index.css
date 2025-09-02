@@ -1,0 +1,288 @@
+/* Simple, direct CSS without Tailwind complexity */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: auto;
+  font-family: 'Poppins', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout containers */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Three-column layout */
+.three-column-layout {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.left-panel {
+  width: 20%;
+  height: 100%;
+  flex-shrink: 0;
+  overflow-y: auto;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+}
+
+.middle-panel {
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.right-panel {
+  width: 20%;
+  height: 100%;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: white;
+  border-left: 1px solid #e5e7eb;
+}
+
+/* Content areas */
+.content-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  background: white;
+  padding: 16px;
+}
+
+.supporting-content {
+  flex-shrink: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px;
+}
+
+/* Header and Footer */
+.app-header {
+  background: #00122d;
+  color: white;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.app-footer {
+  background: #374151;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+p {
+  line-height: 1.7;
+  color: #374151;
+}
+
+/* Scrollbar styling */
+.left-panel::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar,
+.content-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.left-panel::-webkit-scrollbar-track,
+.right-panel::-webkit-scrollbar-track,
+.content-area::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.left-panel::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb,
+.content-area::-webkit-scrollbar-thumb {
+  background: #111827;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover,
+.right-panel::-webkit-scrollbar-thumb:hover,
+.content-area::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+/* Sharp, professional styling */
+* {
+  border-radius: 0 !important;
+}
+
+button, input, textarea, select {
+  border-radius: 0 !important;
+}
+
+/* Custom font families - Sharp, non-bendy fonts */
+.font-mono {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-feature-settings: "liga" 0;
+  font-variant-ligatures: none;
+}
+
+body {
+  font-family: 'Poppins', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-feature-settings: "liga" 0;
+  font-variant-ligatures: none;
+}
+
+/* Ensure sharp, geometric text rendering */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Custom styles for better webapp appearance */
+.prose {
+  max-width: none;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: #111827;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.prose p {
+  color: #374151;
+  line-height: 1.7;
+  font-family: 'Poppins', sans-serif;
+}
+
+.prose img {
+  border: 1px solid #d1d5db;
+  box-shadow: none;
+}
+
+/* Sharp scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #111827;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Remove all rounded corners */
+.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-full {
+  border-radius: 0 !important;
+}
+
+/* Prevent header wrapping in episode content tables */
+.content-area table th {
+  white-space: nowrap;
+}
+
+/* Smooth scrolling for landing page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Landing page section styling */
+.landing-section {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%);
+  backdrop-filter: blur(10px);
+  transition: all 0.6s ease-in-out;
+}
+
+.landing-section:nth-child(even) {
+  background: linear-gradient(135deg, rgba(241,245,249,0.95) 0%, rgba(255,255,255,0.95) 100%);
+}
+
+.landing-title {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #111827 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.landing-subtitle {
+  color: #4b5563;
+  letter-spacing: 0.1em;
+}
+
+.landing-text {
+  color: #6b7280;
+}
+
+/* Professional button styling */
+button {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+/* Professional input styling */
+input, textarea, select {
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #d1d5db;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
+
+/* Counter styles for ordered lists */
+.counter-reset-\[item\] {
+  counter-reset: item;
+}
+
+.counter-increment-\[item\] {
+  counter-increment: item;
+}
+
+.before\:content-\[counter\(item\)\".\"\]:before {
+  content: counter(item) ".";
+}

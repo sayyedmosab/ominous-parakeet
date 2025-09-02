@@ -81,7 +81,9 @@
     },
     "figma-dev-mode": {
       "type": "sse",
-      "url": "http://127.0.0.1:3845/sse"
+      "url": "http://127.0.0.1:3845/sse",
+      "disabled": true,
+      "alwaysAllow": []
     }
   }
 }

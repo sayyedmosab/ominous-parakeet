@@ -42,11 +42,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[var(--heatmap-bg-page)] text-[var(--heatmap-text-primary)]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[var(--heatmap-bg-page)]" style={{color: 'rgba(0, 0, 0, 1)'}}>
       {/* Control panel */}
-      <aside className="md:w-72 w-full p-4 space-y-6 bg-[var(--heatmap-bg-secondary)]/40 border-r border-[var(--heatmap-border-primary)]">
+      <aside className="md:w-72 w-full p-4 space-y-6 border-r border-[var(--heatmap-border-primary)]" style={{color: 'rgba(255, 255, 255, 1)', backgroundColor: 'rgba(117, 117, 117, 1)'}}>
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Data Source</h2>
+          <h2 className="text-xl font-semibold" style={{color: 'rgba(255, 255, 255, 1)'}}>Data Source</h2>
           <div>
             <label htmlFor="year" className="block text-sm font-medium text-[var(--heatmap-text-secondary)]">
               Year
@@ -63,6 +63,7 @@ const App: React.FC = () => {
             onClick={handleFetch}
             disabled={loading}
             className="w-full bg-[var(--heatmap-accent-primary)] text-[var(--heatmap-text-button)] font-bold py-2 px-4 rounded-md hover:bg-[var(--heatmap-accent-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--heatmap-bg-secondary)] focus:ring-[var(--heatmap-accent-focus-ring)] transition-colors duration-200 disabled:bg-[var(--heatmap-accent-disabled)] disabled:cursor-not-allowed"
+            style={{color: 'rgba(255, 255, 255, 1)'}}
           >
             {loading ? 'Fetching...' : 'Fetch Data'}
           </button>
@@ -79,6 +80,7 @@ const App: React.FC = () => {
                     ? 'bg-[var(--heatmap-accent-primary)] text-[var(--heatmap-text-button)]'
                     : 'bg-[var(--heatmap-bg-tertiary)] hover:bg-opacity-75'
                 }`}
+                style={{border: '1px solid rgba(214, 227, 19, 0)'}}
                 aria-pressed={tooltipType === 'list'}
               >
                 List
@@ -141,7 +143,7 @@ const App: React.FC = () => {
         </div>
       </aside>
       {/* Heatmap area */}
-      <main className="flex-grow p-4">
+      <main className="flex-grow p-4" style={{backgroundColor: 'rgba(255, 255, 255, 1)'}}>
         <div className="h-full w-full">
           <CapabilityHeatmapContainer
             capabilities={capabilities}

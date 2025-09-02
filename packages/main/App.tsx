@@ -7,28 +7,32 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // Import Pages
 import HomePage from './pages/HomePage';
+import ThreeDAnimationPage from './pages/ThreeDAnimationPage';
 // Import Architect app from workspace package
 import ArchitectLessonsPage from './pages/ArchitectLessonsPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
-import JosoorPage from './pages/josoor/JosoorPage';
 import JosoorVisionPage from './pages/josoor/JosoorVisionPage';
-import JosoorExplorePage from './pages/josoor/JosoorExplorePage';
-import JosoorExploreSystemsPage from './pages/josoor/JosoorExploreSystemsPage';
-import JosoorExperiencePage from './pages/josoor/JosoorExperiencePage';
-import JosoorExperienceAnalyticsPage from './pages/josoor/JosoorExperienceAnalyticsPage';
-import JosoorExecutePage from './pages/josoor/JosoorExecutePage';
-import JosoorExecuteUseCasesPage from './pages/josoor/JosoorExecuteUseCasesPage';
-import SketchAppPage from './pages/sketchapp/SketchAppPage';
-import SketchAppDesignerPage from './pages/sketchapp/SketchAppDesignerPage';
-import AuraPage from './pages/aura/AuraPage';
-import AuraProjectManagerPage from './pages/aura/AuraProjectManagerPage';
-import WeatherMapPage from './pages/WeatherMapPage';
+import RoadmapPage from './pages/RoadmapPage';
+import ArchitectsForumPage from './pages/ArchitectsForumPage';
+import SimpleTestPage from './pages/SimpleTestPage';
+
+// Simple test component to verify routing
+const TestRoute = () => {
+  return (
+    <div style={{ padding: '20px', background: 'yellow', minHeight: '100vh' }}>
+      <h1>TEST ROUTE WORKING!</h1>
+      <p>If you can see this, routing is working correctly.</p>
+      <p>The /test route is loading this component instead of SimpleTestPage.</p>
+    </div>
+  );
+};
 
 const AppLayout: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 text-gray-800">
-      <main className="flex-grow">
+    <div className="grid grid-rows-[auto,1fr,auto] h-screen bg-gray-100 text-gray-800">
+      <Header />
+      <main className="overflow-y-auto min-h-0">
         <Outlet />
       </main>
       <Footer />
@@ -46,37 +50,14 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             
-            {/* Josoor Routes */}
-            <Route path="/josoor" element={<JosoorPage />} />
-            <Route path="/josoor/vision" element={<JosoorVisionPage />} />
-            <Route path="/josoor/explore/architect" element={<JosoorExplorePage />} />
-            <Route path="/josoor/explore/systems" element={<JosoorExploreSystemsPage />} />
-            <Route path="/josoor/experience/noor" element={<JosoorExperiencePage />} />
-            <Route path="/josoor/experience/analytics" element={<JosoorExperienceAnalyticsPage />} />
-            <Route path="/josoor/execute/journey" element={<JosoorExecutePage />} />
-            <Route path="/josoor/execute/use-cases" element={<JosoorExecuteUseCasesPage />} />
 
-            {/* SketchApp Routes */}
-            <Route path="/sketchapp" element={<SketchAppPage />} />
-            <Route path="/sketchapp/designer" element={
-              <ProtectedRoute>
-                <SketchAppDesignerPage />
-              </ProtectedRoute>
-            } />
-
-            {/* Architect Lessons Integration */}
+            {/* Main Navigation Routes (existing only) */}
+            <Route path="/about" element={<JosoorVisionPage />} />
+            <Route path="/roadmap" element={<RoadmapPage />} />
+            <Route path="/forum" element={<ArchitectsForumPage />} />
+            <Route path="/test" element={<SimpleTestPage />} />
             <Route path="/architect" element={<ArchitectLessonsPage />} />
-
-            {/* Aura Routes */}
-            <Route path="/aura" element={<AuraPage />} />
-            <Route path="/aura/projectmanager" element={
-              <ProtectedRoute>
-                <AuraProjectManagerPage />
-              </ProtectedRoute>
-            } />
-
-            {/* Weather Map Route */}
-            <Route path="/weathermap" element={<WeatherMapPage />} />
+            <Route path="/3danimation" element={<ThreeDAnimationPage />} />
 
             <Route path="*" element={<Navigate to="/" />} />
           </Route>

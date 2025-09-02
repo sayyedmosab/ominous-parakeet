@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { Mail, Lock, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, LogIn, UserPlus, Eye, EyeOff, Apple } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   useEffect(() => {
@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, loginWithGoogle, loginWithApple } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,6 +33,20 @@ const LoginPage: React.FC = () => {
       setError(authError.message);
     } else {
       navigate(from, { replace: true });
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await loginWithGoogle();
+    if (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleAppleLogin = async () => {
+    const { error } = await loginWithApple();
+    if (error) {
+      setError(error.message);
     }
   };
 
@@ -99,6 +113,36 @@ const LoginPage: React.FC = () => {
             </button>
           </div>
         </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full inline-flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue-500 disabled:opacity-50"
+          >
+            <span className="w-5 h-5 flex items-center justify-center text-sm font-bold">G</span>
+            Google
+          </button>
+
+          <button
+            onClick={handleAppleLogin}
+            disabled={loading}
+            className="w-full inline-flex justify-center items-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue-500 disabled:opacity-50"
+          >
+            <Apple className="w-5 h-5" />
+            Apple
+          </button>
+        </div>
+
         <p className="mt-2 text-center text-sm text-gray-600">
           Don't have an account?{' '}
           <Link to="/register" state={{ from: location.state?.from }} className="inline-flex items-center gap-1 font-medium text-electric-blue-600 hover:text-electric-blue-500">

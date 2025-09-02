@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Page - React Components</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Mock the required modules since we can't import them directly
+        const { useState } = React;
+
+        // Simple mock for react-router-dom
+        const mockRouter = {
+            Link: ({ to, children, ...props }) => React.createElement('a', { href: to, ...props }, children),
+            useNavigate: () => (path) => console.log('Navigate to:', path),
+            useLocation: () => ({ pathname: window.location.pathname }),
+        };
+
+        // Mock lucide-react icons
+        const mockIcons = {
+            Home: () => React.createElement('span', {}, '🏠'),
+            BookOpen: () => React.createElement('span', {}, '📖'),
+            Target: () => React.createElement('span', {}, '🎯'),
+            MessageSquare: () => React.createElement('span', {}, '💬'),
+            LogOut: () => React.createElement('span', {}, '🚪'),
+            Menu: () => React.createElement('span', {}, '☰'),
+            X: () => React.createElement('span', {}, '✕'),
+            MessageCircle: () => React.createElement('span', {}, '💬'),
+            Heart: () => React.createElement('span', { style: { color: '#ef4444' } }, '❤️'),
+        };
+
+        // Mock auth context
+        const mockAuth = {
+            useAuth: () => ({
+                user: null,
+                logout: async () => console.log('Logged out')
+            })
+        };
+
+        // Header Component (simplified version based on your Header.tsx)
+        const Header = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [language, setLanguage] = useState('EN');
+
+            const navLinks = [
+                { id: 1, text: 'Home', href: '/', icon: mockIcons.Home },
+                { id: 2, text: 'About', href: '/about', icon: mockIcons.BookOpen },
+                { id: 3, text: 'Roadmap', href: '/roadmap', icon: mockIcons.Target },
+                { id: 4, text: "Architect's Forum", href: '/forum', icon: mockIcons.MessageSquare },
+            ];
+
+            return React.createElement('header', {
+                className: 'shadow-md sticky top-0 z-50 text-white',
+                style: { backgroundColor: '#00122d' }
+            }, [
+                React.createElement('div', { className: 'container mx-auto px-4 sm:px-6 lg:px-8' }, [
+                    React.createElement('div', { className: 'flex items-center justify-between h-20' }, [
+                        React.createElement(mockRouter.Link, {
+                            to: '/',
+                            className: 'flex items-center'
+                        }, React.createElement('img', {
+                            src: '/images/aittlogo.png',
+                            alt: 'AI Twin Tech',
+                            className: 'h-12 w-auto'
+                        })),
+                        React.createElement('div', { className: 'hidden md:flex items-center space-x-8' }, [
+                            React.createElement('nav', { className: 'flex items-center space-x-6' },
+                                navLinks.map(link => {
+                                    const IconComponent = link.icon;
+                                    return React.createElement('div', { key: link.id, className: 'relative group' },
+                                        React.createElement(mockRouter.Link, {
+                                            to: link.href,
+                                            className: 'py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400'
+                                        }, [
+                                            React.createElement(IconComponent, { className: 'w-4 h-4' }),
+                                            link.text
+                                        ])
+                                    );
+                                })
+                            ),
+                            React.createElement('div', { className: 'flex items-center space-x-4' }, [
+                                React.createElement('button', {
+                                    onClick: () => setLanguage(language === 'EN' ? 'AR' : 'EN'),
+                                    className: 'flex items-center gap-1 px-3 py-1.5 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 text-sm'
+                                }, language)
+                            ])
+                        ]),
+                        React.createElement('div', { className: 'md:hidden' },
+                            React.createElement('button', {
+                                onClick: () => setIsOpen(!isOpen),
+                                className: 'text-gray-200 focus:outline-none'
+                            }, isOpen ? React.createElement(mockIcons.X, { className: 'w-6 h-6' }) : React.createElement(mockIcons.Menu, { className: 'w-6 h-6' }))
+                        )
+                    ])
+                ]),
+                isOpen && React.createElement('div', {
+                    className: 'md:hidden pb-4',
+                    style: { backgroundColor: '#00122d' }
+                }, [
+                    React.createElement('nav', { className: 'flex flex-col items-center space-y-4' },
+                        navLinks.map(link => {
+                            const IconComponent = link.icon;
+                            return React.createElement(mockRouter.Link, {
+                                key: link.id,
+                                to: link.href,
+                                onClick: () => setIsOpen(false),
+                                className: 'flex items-center gap-2 text-gray-300 hover:text-electric-blue-400 transition-colors duration-300 font-medium text-lg'
+                            }, [
+                                React.createElement(IconComponent, { className: 'w-5 h-5' }),
+                                link.text
+                            ]);
+                        })
+                    ),
+                    React.createElement('div', { className: 'flex flex-col items-center space-y-4 mt-6' }, [
+                        React.createElement('button', {
+                            onClick: () => setLanguage(language === 'EN' ? 'AR' : 'EN'),
+                            className: 'flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300'
+                        }, language === 'EN' ? 'العربية' : 'English')
+                    ])
+                ])
+            ]);
+        };
+
+        // Footer Component (simplified version based on your Footer.tsx)
+        const Footer = () => {
+            return React.createElement('footer', { className: 'bg-gray-800 text-white mt-auto' }, [
+                React.createElement('div', { className: 'container mx-auto px-4 sm:px-6 lg:px-8 py-6' }, [
+                    React.createElement('div', { className: 'flex flex-col md:flex-row justify-between items-center text-center md:text-left' }, [
+                        React.createElement('p', { className: 'text-gray-400 text-sm mb-4 md:mb-0 flex items-center gap-1' }, [
+                            '© 2025 AI Twin Tech. All rights reserved. - Built with ',
+                            React.createElement(mockIcons.Heart, { className: 'w-4 h-4 text-red-500' }),
+                            ' by SketchApp.'
+                        ]),
+                        React.createElement('div', { className: 'flex items-center' }, [
+                            React.createElement('a', {
+                                href: '#',
+                                className: 'flex items-center gap-2 text-white font-semibold hover:text-electric-blue-400 transition-colors duration-300'
+                            }, [
+                                React.createElement(mockIcons.MessageCircle, { className: 'w-5 h-5' }),
+                                "Let's Chat (Introvert Friendly)"
+                            ])
+                        ])
+                    ])
+                ])
+            ]);
+        };
+
+        // Generate dummy text for testing
+        const generateDummyText = (frameName, count = 200) => {
+            const lines = [];
+            for (let i = 1; i <= count; i++) {
+                lines.push(`${frameName} - Line ${i}`);
+            }
+            return lines.join('\n');
+        };
+
+        // Main SimpleTest Component
+        const SimpleTest = () => {
+            return React.createElement('div', {
+                style: {
+                    height: '100vh',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    margin: 0,
+                    padding: 0
+                }
+            }, [
+                React.createElement(Header),
+                React.createElement('div', {
+                    style: {
+                        flex: 1,
+                        backgroundColor: '#f8f9fa',
+                        padding: '20px',
+                        overflowY: 'auto',
+                        overflowX: 'hidden'
+                    }
+                }, [
+                    React.createElement('h2', {}, 'MIDDLE FRAME - Flexible Height with Scroll'),
+                    React.createElement('div', {
+                        style: {
+                            whiteSpace: 'pre-wrap',
+                            wordWrap: 'break-word',
+                            fontFamily: 'monospace',
+                            fontSize: '12px',
+                            lineHeight: '1.4'
+                        }
+                    }, generateDummyText('Middle Frame'))
+                ]),
+                React.createElement(Footer)
+            ]);
+        };
+
+        // Render the component
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(SimpleTest));
+    </script>
+</body>
+</html>

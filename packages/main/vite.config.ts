@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 5170,
         host: true,
+        hmr: {
+          overlay: false
+        }
       },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

@@ -17,9 +17,9 @@
   --heatmap-bg-popup-body: #111827;
 
   /* Text Colors */
-  --heatmap-text-primary: #f9fafb; /* Tailwind gray-50 */
-  --heatmap-text-secondary: #d1d5db; /* Tailwind gray-300 */
-  --heatmap-text-muted: #9ca3af; /* Tailwind gray-400 */
+  --heatmap-text-primary: #000000; /* Black for main content area */
+  --heatmap-text-secondary: #374151; /* Dark gray for secondary text */
+  --heatmap-text-muted: #6b7280; /* Medium gray for muted text */
   --heatmap-text-button: #ffffff;
   --heatmap-text-accent: #38bdf8; /* Tailwind sky-400 */
 

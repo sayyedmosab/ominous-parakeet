@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-frame {
+            height: auto;
+            min-height: 80px;
+            background: #00122d;
+            color: white;
+            padding: 0;
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            height: 48px;
+            width: auto;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #d1d5db;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #60a5fa;
+        }
+
+        .nav-link.active {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .language-btn {
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .language-btn:hover {
+            background: #4b5563;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .middle-frame {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .bottom-frame {
+            background: #1f2937;
+            color: white;
+            padding: 24px 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .footer-flex {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-flex {
+                flex-direction: row;
+                text-align: left;
+            }
+        }
+
+        .footer-text {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        @media (min-width: 768px) {
+            .footer-text {
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-link {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #60a5fa;
+        }
+
+        .content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-frame">
+            <div class="header-content">
+                <div class="header-flex">
+                    <a href="/" class="logo-link">
+                        <img src="/images/aittlogo.png" alt="AI Twin Tech" class="logo">
+                    </a>
+                    <nav class="nav">
+                        <a href="/" class="nav-link active">🏠 Home</a>
+                        <a href="/about" class="nav-link">📖 About</a>
+                        <a href="/roadmap" class="nav-link">🎯 Roadmap</a>
+                        <a href="/forum" class="nav-link">💬 Architect's Forum</a>
+                        <button class="language-btn">EN</button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle-frame">
+            <h2>MIDDLE FRAME - Flexible Height</h2>
+            <div class="content">
+Middle Frame - Line 1
+Middle Frame - Line 2
+Middle Frame - Line 3
+Middle Frame - Line 4
+Middle Frame - Line 5
+Middle Frame - Line 6
+Middle Frame - Line 7
+Middle Frame - Line 8
+Middle Frame - Line 9
+Middle Frame - Line 10
+Middle Frame - Line 11
+Middle Frame - Line 12
+Middle Frame - Line 13
+Middle Frame - Line 14
+Middle Frame - Line 15
+Middle Frame - Line 16
+Middle Frame - Line 17
+Middle Frame - Line 18
+Middle Frame - Line 19
+Middle Frame - Line 20
+Middle Frame - Line 21
+Middle Frame - Line 22
+Middle Frame - Line 23
+Middle Frame - Line 24
+Middle Frame - Line 25
+Middle Frame - Line 26
+Middle Frame - Line 27
+Middle Frame - Line 28
+Middle Frame - Line 29
+Middle Frame - Line 30
+Middle Frame - Line 31
+Middle Frame - Line 32
+Middle Frame - Line 33
+Middle Frame - Line 34
+Middle Frame - Line 35
+Middle Frame - Line 36
+Middle Frame - Line 37
+Middle Frame - Line 38
+Middle Frame - Line 39
+Middle Frame - Line 40
+Middle Frame - Line 41
+Middle Frame - Line 42
+Middle Frame - Line 43
+Middle Frame - Line 44
+Middle Frame - Line 45
+Middle Frame - Line 46
+Middle Frame - Line 47
+Middle Frame - Line 48
+Middle Frame - Line 49
+Middle Frame - Line 50
+Middle Frame - Line 51
+Middle Frame - Line 52
+Middle Frame - Line 53
+Middle Frame - Line 54
+Middle Frame - Line 55
+Middle Frame - Line 56
+Middle Frame - Line 57
+Middle Frame - Line 58
+Middle Frame - Line 59
+Middle Frame - Line 60
+Middle Frame - Line 61
+Middle Frame - Line 62
+Middle Frame - Line 63
+Middle Frame - Line 64
+Middle Frame - Line 65
+Middle Frame - Line 66
+Middle Frame - Line 67
+Middle Frame - Line 68
+Middle Frame - Line 69
+Middle Frame - Line 70
+Middle Frame - Line 71
+Middle Frame - Line 72
+Middle Frame - Line 73
+Middle Frame - Line 74
+Middle Frame - Line 75
+Middle Frame - Line 76
+Middle Frame - Line 77
+Middle Frame - Line 78
+Middle Frame - Line 79
+Middle Frame - Line 80
+Middle Frame - Line 81
+Middle Frame - Line 82
+Middle Frame - Line 83
+Middle Frame - Line 84
+Middle Frame - Line 85
+Middle Frame - Line 86
+Middle Frame - Line 87
+Middle Frame - Line 88
+Middle Frame - Line 89
+Middle Frame - Line 90
+Middle Frame - Line 91
+Middle Frame - Line 92
+Middle Frame - Line 93
+Middle Frame - Line 94
+Middle Frame - Line 95
+Middle Frame - Line 96
+Middle Frame - Line 97
+Middle Frame - Line 98
+Middle Frame - Line 99
+Middle Frame - Line 100
+Middle Frame - Line 101
+Middle Frame - Line 102
+Middle Frame - Line 103
+Middle Frame - Line 104
+Middle Frame - Line 105
+Middle Frame - Line 106
+Middle Frame - Line 107
+Middle Frame - Line 108
+Middle Frame - Line 109
+Middle Frame - Line 110
+Middle Frame - Line 111
+Middle Frame - Line 112
+Middle Frame - Line 113
+Middle Frame - Line 114
+Middle Frame - Line 115
+Middle Frame - Line 116
+Middle Frame - Line 117
+Middle Frame - Line 118
+Middle Frame - Line 119
+Middle Frame - Line 120
+Middle Frame - Line 121
+Middle Frame - Line 122
+Middle Frame - Line 123
+Middle Frame - Line 124
+Middle Frame - Line 125
+Middle Frame - Line 126
+Middle Frame - Line 127
+Middle Frame - Line 128
+Middle Frame - Line 129
+Middle Frame - Line 130
+Middle Frame - Line 131
+Middle Frame - Line 132
+Middle Frame - Line 133
+Middle Frame - Line 134
+Middle Frame - Line 135
+Middle Frame - Line 136
+Middle Frame - Line 137
+Middle Frame - Line 138
+Middle Frame - Line 139
+Middle Frame - Line 140
+Middle Frame - Line 141
+Middle Frame - Line 142
+Middle Frame - Line 143
+Middle Frame - Line 144
+Middle Frame - Line 145
+Middle Frame - Line 146
+Middle Frame - Line 147
+Middle Frame - Line 148
+Middle Frame - Line 149
+Middle Frame - Line 150
+Middle Frame - Line 151
+Middle Frame - Line 152
+Middle Frame - Line 153
+Middle Frame - Line 154
+Middle Frame - Line 155
+Middle Frame - Line 156
+Middle Frame - Line 157
+Middle Frame - Line 158
+Middle Frame - Line 159
+Middle Frame - Line 160
+Middle Frame - Line 161
+Middle Frame - Line 162
+Middle Frame - Line 163
+Middle Frame - Line 164
+Middle Frame - Line 165
+Middle Frame - Line 166
+Middle Frame - Line 167
+Middle Frame - Line 168
+Middle Frame - Line 169
+Middle Frame - Line 170
+Middle Frame - Line 171
+Middle Frame - Line 172
+Middle Frame - Line 173
+Middle Frame - Line 174
+Middle Frame - Line 175
+Middle Frame - Line 176
+Middle Frame - Line 177
+Middle Frame - Line 178
+Middle Frame - Line 179
+Middle Frame - Line 180
+Middle Frame - Line 181
+Middle Frame - Line 182
+Middle Frame - Line 183
+Middle Frame - Line 184
+Middle Frame - Line 185
+Middle Frame - Line 186
+Middle Frame - Line 187
+Middle Frame - Line 188
+Middle Frame - Line 189
+Middle Frame - Line 190
+Middle Frame - Line 191
+Middle Frame - Line 192
+Middle Frame - Line 193
+Middle Frame - Line 194
+Middle Frame - Line 195
+Middle Frame - Line 196
+Middle Frame - Line 197
+Middle Frame - Line 198
+Middle Frame - Line 199
+Middle Frame - Line 200
+            </div>
+        </div>
+
+        <div class="bottom-frame">
+            <div class="footer-content">
+                <div class="footer-flex">
+                    <p class="footer-text">
+                        © 2025 AI Twin Tech. All rights reserved. - Built with <span style="color: #ef4444;">❤️</span> by SketchApp.
+                    </p>
+                    <a href="#" class="footer-link">
+                        <span style="font-size: 20px;">💬</span> Let's Chat (Introvert Friendly)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

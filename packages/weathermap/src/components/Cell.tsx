@@ -66,7 +66,7 @@ const Cell: React.FC<CellProps> = ({ data, onCellClick, overlayConfig, tooltipTy
       <div
         className={`relative h-full w-full border-l-4 ${borderClass} ${clickableClasses} flex items-center justify-center p-2 text-center rounded-md bg-[var(--heatmap-bg-tertiary)]/20 hover:bg-[var(--heatmap-bg-hover)] transition-all duration-200`}
       >
-        <span className="text-[var(--heatmap-text-primary)] text-xs sm:text-sm font-medium break-words drop-shadow-md">
+        <span className="text-[var(--heatmap-text-primary)] text-sm sm:text-base font-medium break-words drop-shadow-md">
           {data.name}
         </span>
       </div>

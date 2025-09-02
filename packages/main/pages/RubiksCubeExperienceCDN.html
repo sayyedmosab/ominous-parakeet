@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RubiksCubeExperience – CDN</title>
+  <style>
+    :root { --bg:transparent; --panel:#0a0f1c; --text:#e5e7eb; --accent:#7c3aed; }
+    html, body { height: 100%; margin: 0; background: transparent; color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+    .wrap { position: relative; height: 100%; }
+    .sticky-canvas { position: fixed; inset: 0; height: 100vh; overflow: hidden; background: transparent; z-index: 0; }
+    #stage { background: transparent !important; }
+    #stage { width: 100%; height: 100%; display:block; }
+    .spacer { height: 18000px; } /* Scroll length to span all phases */
+
+    header, footer { position: fixed; left: 0; right: 0; display:flex; align-items:center; justify-content:space-between; padding: 10px 14px; background: rgba(10,15,28,0.6); backdrop-filter: blur(6px); z-index: 5; border-bottom: 1px solid #111827; }
+    header { top: 0; }
+    footer { bottom: 0; border-top: 1px solid #111827; border-bottom: none; }
+    .badge { font-size: 12px; padding: 6px 10px; border:1px solid #374151; background:#0f172a; border-radius: 999px; font-weight: 700; letter-spacing:0.02em; }
+    .toolbar { display:flex; gap:8px; align-items:center; }
+    .btn { appearance:none; border:1px solid #374151; background:#0f172a; color:var(--text); padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:600; }
+    .btn:hover { background:#111827; }
+    .phase-indicator { position: fixed; right: 12px; top: 12px; z-index: 10; display:flex; gap:8px; align-items:center; }
+    .phase-label { font-size: 12px; padding: 6px 10px; border:1px solid #374151; background:#0f172a; border-radius: 999px; font-weight: 700; }
+    .mouse-label { display:none; font-size: 12px; padding: 6px 10px; border:1px solid #374151; background:#0f172a; border-radius: 999px; font-weight: 700; }
+    .metrics { position: fixed; left: 12px; bottom: 12px; opacity: .8; font-size: 12px; }
+    .coords-panel { position: fixed; right: 12px; top: 80px; width: 300px; max-height: calc(100vh - 160px); overflow: auto; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); border: 1px solid #374151; border-radius: 8px; padding: 8px 10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 11px; line-height: 1.45; color: #e5e7eb; z-index: 9; }
+    /* Hide UI overlays for clean animation */
+    header, footer, .coords-panel, .phase-indicator, .metrics { display: none !important; }
+  </style>
+
+  <!-- map the baare specifier 'three' to the CDN module -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+  <!-- map the bare specifier 'three' to the CDN module -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+
+
+    <div class="sticky-canvas">
+      <canvas id="stage"></canvas>
+    </div>
+
+
+    <div class="spacer"></div>
+
+
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+    // ===== Utilities =====
+    const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const invLerp = (a, b, v) => clamp((v - a) / (b - a), 0, 1);
+    const easeInOut = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+
+    function phaseProgress(global, a, b) { return invLerp(a, b, global); }
+
+    function viewportWorldHalfExtents(cam) {
+      const d = cam.position.distanceTo(new THREE.Vector3());
+      const halfH = Math.tan(THREE.MathUtils.degToRad(cam.fov * 0.5)) * d;
+      const halfW = halfH * cam.aspect;
+      return { halfW, halfH };
+    }
+
+    const PAD_NDC = 0.90; // keep within 90% of viewport for extra safety
+
+    function cubeCorners(center, half) {
+      const offs = [-1, 1];
+      const res = [];
+      for (const dx of offs) for (const dy of offs) for (const dz of offs) {
+        res.push(new THREE.Vector3(center.x + dx*half, center.y + dy*half, center.z + dz*half));
+      }
+      return res;
+    }
+
+    function cornersFitInView(center, half) {
+      const corners = cubeCorners(center, half);
+      for (const c of corners) {
+        const p = c.clone().project(camera);
+        if (Math.abs(p.x) > PAD_NDC || Math.abs(p.y) > PAD_NDC || p.z < -1 || p.z > 1) return false;
+      }
+      return true;
+    }
+
+    function clampAlongDirToFit(dir, R, half) {
+      // binary search max s in [0, R] such that corners fit
+      let lo = 0, hi = R;
+      for (let it = 0; it < 20; it++) {
+        const mid = (lo + hi) * 0.5;
+        const pos = dir.clone().multiplyScalar(mid);
+        if (cornersFitInView(pos, half)) lo = mid; else hi = mid;
+      }
+      return lo;
+    }
+
+    function makeCube(size, fillColor, edgeColor) {
+      const geom = new THREE.BoxGeometry(size, size, size);
+      const mat = new THREE.MeshStandardMaterial({ color: fillColor, metalness: 0.1, roughness: 0.6, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.castShadow = true; mesh.receiveShadow = true;
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geom), new THREE.LineBasicMaterial({ color: edgeColor }));
+      edges.renderOrder = 10;
+      mesh.add(edges);
+      return mesh;
+    }
+
+    function setCubeFillColor(obj3D, color) {
+      obj3D.traverse(o => { if (o.isMesh && o.material) { o.material.color.set(color); } });
+    }
+
+    // ===== Scene Setup =====
+    const canvas = document.getElementById('stage');
+    const containerEl = document.querySelector('.sticky-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.background = 'transparent';
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 500);
+    camera.position.set(6, 4, 12);
+    camera.lookAt(0, 0, 0);
+
+    // Soft ambient + key light
+    const hemi = new THREE.HemisphereLight(0x8aa4ff, 0x0e0f15, 0.7); scene.add(hemi);
+    const dir = new THREE.DirectionalLight(0xffffff, 1.0); dir.position.set(6, 10, 8); dir.castShadow = true; scene.add(dir);
+
+    // PostFX
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    renderPass.clear = true;
+    renderPass.clearAlpha = 0.0;
+    composer.addPass(renderPass);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.7, 0.2);
+    composer.addPass(bloomPass);
+    let bloomEnabled = false;
+
+    // Root group
+    const root = new THREE.Group();
+    scene.add(root);
+
+    // ===== Build 27 Large Pieces (3x3x3) =====
+    const LARGE_SIZE = 1.0;
+    const GAP = 0.08;
+    const STEP = LARGE_SIZE + GAP;
+    const largePieces = [];
+
+    const largeGroup = new THREE.Group();
+    root.add(largeGroup);
+
+    for (let x = -1; x <= 1; x++) {
+      for (let y = -1; y <= 1; y++) {
+        for (let z = -1; z <= 1; z++) {
+          const cube = makeCube(LARGE_SIZE, 0x00f0ff, 0xffffff);
+          cube.position.set(x * STEP, y * STEP, z * STEP);
+          largeGroup.add(cube);
+          largePieces.push(cube);
+        }
+      }
+    }
+
+    // Save initial positions for reversible Phase 1 state
+    const initialLargePositions = largePieces.map(p => p.position.clone());
+
+    // Scale 1.5x initially (Phase 1 requirement)
+    largeGroup.scale.setScalar(1.5);
+    const PHASE1_INITIAL_SCALE = largeGroup.scale.x;
+    const PHASE1_SPAN = (2 * STEP + LARGE_SIZE) * PHASE1_INITIAL_SCALE; // full Rubik cube width (centers span + one cube size)
+
+    // ===== Outer Frame (12 thick beams) and Core Sphere/Light =====
+    const frameGroup = new THREE.Group();
+    root.add(frameGroup);
+    const frameSize = PHASE1_SPAN; // exactly Phase 1 Rubik cube span
+    const frameThickness = frameSize * (0.06 / 2.2); // keep beam thickness ratio from reference
+    const half = frameSize * 0.5;
+    const beamMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    function beam(w,h,d,x,y,z){ const g=new THREE.BoxGeometry(w,h,d); const m=new THREE.Mesh(g, beamMat); m.position.set(x,y,z); frameGroup.add(m); }
+    // 4 vertical
+    beam(frameThickness, frameSize, frameThickness, -half, 0, -half);
+    beam(frameThickness, frameSize, frameThickness, -half, 0,  half);
+    beam(frameThickness, frameSize, frameThickness,  half, 0, -half);
+    beam(frameThickness, frameSize, frameThickness,  half, 0,  half);
+    // top
+    beam(frameSize, frameThickness, frameThickness, 0,  half, -half);
+    beam(frameSize, frameThickness, frameThickness, 0,  half,  half);
+    beam(frameThickness, frameThickness, frameSize, -half, half, 0);
+    beam(frameThickness, frameThickness, frameSize,  half, half, 0);
+    // bottom
+    beam(frameSize, frameThickness, frameThickness, 0, -half, -half);
+    beam(frameSize, frameThickness, frameThickness, 0, -half,  half);
+    beam(frameThickness, frameThickness, frameSize, -half,-half, 0);
+    beam(frameThickness, frameThickness, frameSize,  half,-half, 0);
+    frameGroup.visible = false;
+
+    const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(PHASE1_SPAN * 0.14, 48, 48), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    coreSphere.castShadow = false; coreSphere.receiveShadow = false; coreSphere.visible = false; root.add(coreSphere);
+    const coreLight = new THREE.PointLight(0x9f7bff, 2.0, PHASE1_SPAN * 3.0); root.add(coreLight); coreLight.visible = false;
+
+    // ===== Mini Cubes (to reach 729) =====
+    const MINI_SIZE = 0.28;
+    const MINI_GAP = 0.06;
+    const MINI_STEP = MINI_SIZE + MINI_GAP;
+    const miniGroup = new THREE.Group();
+    root.add(miniGroup);
+    miniGroup.visible = false; // revealed in Phase 4
+    const miniCubes = [];
+
+    // For each large piece, spawn a local 3x3x3 of minis and tag with owner index
+    for (let ownerIndex = 0; ownerIndex < largePieces.length; ownerIndex++) {
+      const lp = largePieces[ownerIndex];
+      const base = lp.position.clone();
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          for (let k = -1; k <= 1; k++) {
+            const m = makeCube(MINI_SIZE, 0x1f2937, 0xffffff);
+            m.position.set(base.x + i * MINI_STEP, base.y + j * MINI_STEP, base.z + k * MINI_STEP);
+            m.userData.ownerIndex = ownerIndex;
+            m.userData.local = new THREE.Vector3(i, j, k);
+            m.userData.isCenter = (i === 0 && j === 0 && k === 0);
+            m.userData.base = new THREE.Vector3(i, j, k);
+            m.userData.initialScale = 0.0001; // start hidden, will grow in phase 4
+            m.scale.setScalar(m.userData.initialScale);
+            miniGroup.add(m);
+            miniCubes.push(m);
+          }
+        }
+      }
+    }
+
+    // ===== UI/Interaction =====
+    const progressEl = document.getElementById('progress');
+    const phaseLabelEl = document.getElementById('phaseLabel');
+    const mouseLabelEl = document.getElementById('mouseLabel');
+    const metricsEl = document.getElementById('metrics');
+    const coordsEl = document.getElementById('coordsPanel');
+
+    const SAMPLE_LARGE = [0, 1, 13, 26];
+    const SAMPLE_MINI = [13, 40, 364, 715];
+    function fmt(v) { return `${v.x.toFixed(2)}, ${v.y.toFixed(2)}, ${v.z.toFixed(2)}`; }
+    let lastCoordsUpdate = 0;
+    function updateCoords(phaseId) {
+      if (!coordsEl) return;
+      if (perf.now - lastCoordsUpdate < 100) return; // ~10 fps update cap
+      lastCoordsUpdate = perf.now;
+      let out = `Phase: ${phaseLabelEl.textContent}\n\n`;
+      out += `Large cubes (sample indices ${SAMPLE_LARGE.join(', ')}):\n`;
+      SAMPLE_LARGE.forEach(i => {
+        const lp = largePieces[i];
+        if (lp) {
+          const wp = lp.getWorldPosition(new THREE.Vector3());
+          out += `L[${i}]: (${fmt(wp)})\n`;
+        }
+      });
+      if (miniGroup.visible) {
+        out += `\nMini cubes (sample indices ${SAMPLE_MINI.join(', ')}):\n`;
+        SAMPLE_MINI.forEach(i => {
+          const m = miniCubes[i];
+          if (m) {
+            const wp = m.getWorldPosition(new THREE.Vector3());
+            out += `m[${i}]: (${fmt(wp)})\n`;
+          }
+        });
+      }
+      coordsEl.textContent = out;
+    }
+
+    // Phase 1 anchor snapshot (strict handover)
+    let phase1AnchorSet = false;
+    const phase1Anchor = { largePositions: [], largeScale: 1.5, rootRotation: new THREE.Vector2() };
+
+    // Phase 2 preparation (from Phase 1 end-state)
+    let phase2Prepared = false;
+    let phase2FromPositions = [];
+    let phase2EndPositions = []; // exact end-state of Phase 2 for strict handover
+
+    // Phase 3 preparation (from Phase 2 end-state)
+    let phase3Prepared = false;
+    let phase3FromPositions = [];
+    let phase3FromScale = 1.5;
+    let phase3BaseRotations = [];
+    let phase3Axes = [];
+    let phase3Speeds = []; // radians per second
+    let phase3StartTime = 0; // zero hover/rotation on entry so Phase 2 is exact start
+    const PHASE3_HOVER_AMP = 0.06;
+    const PHASE3_HOVER_FREQ = 0.6;
+
+    // Phase 4 preparation (from Phase 3 end-state)
+    let phase4Prepared = false;
+    let phase4FromLargePositions = [];
+    let phase4FromLargeQuats = [];
+
+    // Phase 5 preparation (from Phase 4 end-state)
+    let phase5Prepared = false;
+    let phase5StartPositions = [];
+    let phase5Dirs = [];
+
+    // Phase 6 preparation (from Phase 5 end-state)
+    let phase6Prepared = false;
+    let phase6AnchorPositions = [];
+    let phase6ColorOrder = [];
+    let phase6Activation = [];
+
+    // Phase 7 preparation (from Phase 6 end-state)
+    let phase7Prepared = false;
+    let phase7StartPositions = [];
+    let phase7Dirs = [];
+    let phase7Swirl = [];
+
+    // Phase 8 preparation (from Phase 7 end-state)
+    let phase8Prepared = false;
+    let phase8StartPositions = [];
+
+    // Phases 5–8 preparation (anchored from end of Phase 4)
+    let phase58Prepared = false;
+    let phase58StartPositions = [];
+    let phase58Dirs = [];
+    let phase58Swirl = [];
+    let phase58ClusterIds = [];
+
+    // Fixed camera: derive once from initial position
+    const INITIAL_DIR = camera.position.clone().normalize();
+    const FIXED_DISTANCE = camera.position.length() * 1.8;
+    camera.position.copy(INITIAL_DIR.clone().multiplyScalar(FIXED_DISTANCE));
+
+    document.getElementById('reset').addEventListener('click', () => {
+      camera.position.copy(INITIAL_DIR.clone().multiplyScalar(FIXED_DISTANCE));
+      camera.lookAt(0, 0, 0);
+      targetRot.set(0, 0);
+    });
+    document.getElementById('toggleBloom').addEventListener('click', () => {
+      bloomEnabled = !bloomEnabled; bloomPass.enabled = bloomEnabled;
+    });
+
+    // Mouse rotation mapping for Phase 1 and 9
+    const pointer = new THREE.Vector2();
+    const targetRot = new THREE.Vector2();
+    window.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = ((e.clientY - r.top) / r.height) * 2 - 1;
+      targetRot.set(pointer.y * 0.4, pointer.x * 0.6);
+    });
+
+    // Scroll progress [0..1]
+    function globalProgress() {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      return maxScroll > 0 ? clamp(window.scrollY / maxScroll, 0, 1) : 0;
+    }
+
+    // ===== Phase Ranges =====
+    const PHASES = [
+      { id: 1, start: 0.00, end: 0.0201, label: 'Phase 1 — Idle / Mouse Rotation' },
+      { id: 2, start: 0.0201, end: 0.1206, label: 'Phase 2 — First Dismantle / Dramatic Cloud' },
+      { id: 3, start: 0.1206, end: 0.1448, label: 'Phase 3 — Settle with Perspective' },
+      { id: 4, start: 0.1448, end: 0.3138, label: 'Phase 4 — Rubik Transform' },
+      { id: 5, start: 0.3138, end: 0.43, label: 'Phase 5 — Expand to 43.3%' },
+      { id: 6, start: 0.43, end: 0.52, label: 'Phase 6 — Popcorn Recolor' },
+      { id: 7, start: 0.52, end: 0.62, label: 'Phase 7 — Dance' },
+      { id: 8, start: 0.62, end: 0.70, label: 'Phase 8 — Final Morph' },
+      { id: 9, start: 0.70, end: 1.0, label: 'Phase 9 — Final Formation' }
+    ];
+
+    // Fixed dismantle radius for Phase 2 (no viewport-based formula)
+    const PHASE2_RADIUS = 8.0;
+
+    /*
+      NOTE: Alternative dynamic formula (to be tested only after final phase is done)
+
+      function dynamicPhase2Radius() {
+        const { halfW, halfH } = viewportWorldHalfExtents(camera);
+        const halfMin = Math.min(halfW, halfH);
+        const groupScale = largeGroup.scale.x;
+        const pieceHalf = Math.sqrt(3) * (LARGE_SIZE * groupScale) / 2;
+        return Math.max(halfMin * PAD_NDC - pieceHalf, STEP * 2);
+      }
+
+      function projectCornersWithinPad(center, halfDiag) {
+        const corners = [
+          new THREE.Vector3( 1, 1, 1), new THREE.Vector3( 1, 1,-1),
+          new THREE.Vector3( 1,-1, 1), new THREE.Vector3( 1,-1,-1),
+          new THREE.Vector3(-1, 1, 1), new THREE.Vector3(-1, 1,-1),
+          new THREE.Vector3(-1,-1, 1), new THREE.Vector3(-1,-1,-1)
+        ];
+        for (const c of corners) {
+          const p = center.clone().add(c.multiplyScalar(halfDiag)).project(camera);
+          if (Math.abs(p.x) > PAD_NDC || Math.abs(p.y) > PAD_NDC) return false;
+        }
+        return true;
+      }
+      // Usage idea:
+      // const R = dynamicPhase2Radius();
+      // const dir = largeDirs[i];
+      // binary search s in [0,R] where projectCornersWithinPad(dir*s, pieceHalf) == true
+    */
+
+    function getPhase(g) {
+      for (const p of PHASES) if (g >= p.start && g <= p.end) return p; return PHASES[PHASES.length-1];
+    }
+
+    // ===== Layout helpers =====
+    function cloudRadiusForLarge() {
+      const { halfW, halfH } = viewportWorldHalfExtents(camera);
+      const halfMin = Math.min(halfW, halfH);
+      const pieceHalf = Math.sqrt(3) * (LARGE_SIZE * 0.5) * 1.5; // include initial scale 1.5
+      return Math.max(halfMin * 0.90 - pieceHalf, STEP * 2);
+    }
+
+    function cloudRadiusForMini() {
+      const { halfW, halfH } = viewportWorldHalfExtents(camera);
+      const halfMin = Math.min(halfW, halfH);
+      const pieceHalf = Math.sqrt(3) * (MINI_SIZE * 0.5);
+      return Math.max(halfMin * 0.95 - pieceHalf, MINI_STEP * 8);
+    }
+
+    // Precompute normalized directions for each large piece from center
+    const largeDirs = largePieces.map(p => {
+      const v = p.position.clone().normalize();
+      if (v.lengthSq() === 0) v.set(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1).normalize();
+      return v;
+    });
+
+    // Utilities for deterministic pseudo-random
+    function hash11(x){
+      let t = (x>>>0) * 2654435761 >>> 0; t ^= t << 13; t ^= t >>> 17; t ^= t << 5; return (t>>>0) / 4294967295;
+    }
+
+    // Final sculpture targets (layered spherical distribution with oriented/elongated minis)
+    const sculpturePos = new Array(miniCubes.length);
+    const sculptureQuat = new Array(miniCubes.length);
+    const sculptureScale = new Array(miniCubes.length);
+    (function buildSculpture(){
+      const layers=9, latSteps=9, lonSteps=9;
+      const baseR = frameSize * (0.92 / 2.2); // match reference ratio, scaled to Phase 1 frame
+      let k=0;
+      for(let l=0; l<layers; l++){
+        const r = 0.55 + (l/(layers-1))*0.40;
+        for(let a=0; a<latSteps; a++){
+          const phi = Math.PI * (a+0.5)/latSteps;
+          for(let b=0; b<lonSteps; b++){
+            const theta = 2*Math.PI*(b/lonSteps);
+            const nx = Math.sin(phi)*Math.cos(theta);
+            const ny = Math.cos(phi);
+            const nz = Math.sin(phi)*Math.sin(theta);
+            const rad = baseR*r;
+            const px=nx*rad, py=ny*rad, pz=nz*rad;
+            const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), new THREE.Vector3(nx,ny,nz));
+            const elong = 1.0 + 0.85*((a%3===0?0.9:0.4)+0.15*Math.sin((a+b+l)*0.7));
+            const s=new THREE.Vector3(1,1,elong);
+            sculpturePos[k]=new THREE.Vector3(px,py,pz);
+            sculptureQuat[k]=q;
+            sculptureScale[k]=s;
+            k++;
+          }
+        }
+      }
+    })();
+
+    // ===== Animation per phase =====
+    let lastPhaseId = null;
+    function applyPhases(g) {
+      const phase = getPhase(g);
+      if (lastPhaseId !== phase.id) {
+        if (phase.id === 2) phase2Prepared = false; // re-anchor from current Phase 1 end on entry
+        if (phase.id === 3) phase3Prepared = false; // re-anchor from current Phase 2 end on entry
+        if (phase.id === 4) phase4Prepared = false; // re-anchor from current Phase 3 end on entry
+        if (phase.id === 5) phase5Prepared = false;
+        if (phase.id === 6) phase6Prepared = false;
+        if (phase.id === 7) phase7Prepared = false;
+        if (phase.id === 8) phase8Prepared = false;
+        lastPhaseId = phase.id;
+      }
+      const label = phase.label;
+      if (phaseLabelEl) phaseLabelEl.textContent = label;
+      if (progressEl) progressEl.textContent = (g * 100).toFixed(1) + '%';
+
+      // Default visibility
+      if (mouseLabelEl) mouseLabelEl.style.display = 'none';
+
+      // Base transforms reset
+      // Keep root rotation gentle toward targetRot only in Phase 0 and 9
+
+      // Phase 1 — Idle / Mouse Rotation
+      if (phase.id === 1) {
+        const t = phaseProgress(g, phase.start, phase.end);
+        if (mouseLabelEl) mouseLabelEl.style.display = 'inline-block';
+        largeGroup.visible = true; miniGroup.visible = false;
+        // deterministic positions/colors every frame for reversible scroll
+        largePieces.forEach((p, i) => {
+          // Smoothly settle back to Phase 1 initial positions to avoid snapping on reverse
+          const targetPos = initialLargePositions[i];
+          p.position.lerp(targetPos, 0.25);
+          if (p.material) {
+            if (p.material.color) p.material.color.set(0x00f0ff);
+            p.material.transparent = false;
+            p.material.opacity = 1.0;
+            p.material.depthWrite = true;
+          }
+          // reset edges opacity/transparent
+          p.traverse(o => {
+            if (o.isLineSegments && o.material) {
+              o.material.transparent = false;
+              o.material.opacity = 1.0;
+              o.material.depthWrite = true;
+            }
+          });
+          p.scale.lerp(new THREE.Vector3(1,1,1), 0.25);
+        });
+        largeGroup.scale.setScalar(1.5);
+        // strict handover: snapshot end-state once when phase completes
+        if (!phase1AnchorSet && g >= phase.end - 1e-6) {
+          phase1Anchor.largePositions = largePieces.map(p => p.position.clone());
+          phase1Anchor.largeScale = largeGroup.scale.x;
+          phase1Anchor.rootRotation = new THREE.Vector2(root.rotation.x, root.rotation.y);
+          phase1AnchorSet = true;
+        }
+      }
+
+      // Phase 2 — First Dismantle / Dramatic Cloud
+      if (phase.id === 2) {
+        const t = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = true; miniGroup.visible = false;
+
+        // Prepare on each entry using strict handover from current Phase 1 end
+        if (!phase2Prepared) {
+          phase2FromPositions = largePieces.map(p => p.position.clone());
+          phase2Prepared = true;
+        }
+
+        const R = PHASE2_RADIUS;
+        // keep root rotation neutral during cloud
+        root.rotation.set(0, 0, 0);
+
+        largePieces.forEach((p, i) => {
+          const dir = largeDirs[i];
+          const target = dir.clone().multiplyScalar(R);
+          const from = phase2FromPositions[i] || p.position.clone();
+          p.position.copy(from.clone().lerp(target, t));
+          if (p.material) {
+            if (p.material.color) p.material.color.set(0x00f0ff);
+            p.material.transparent = false;
+            p.material.opacity = 1.0;
+            p.material.depthWrite = true;
+          }
+          p.traverse(o => {
+            if (o.isLineSegments && o.material) {
+              o.material.transparent = false;
+              o.material.opacity = 1.0;
+              o.material.depthWrite = true;
+            }
+          });
+        });
+        // capture end-state positions for use as Phase 3 base (consistent anchor)
+        if (t >= 0.999) {
+          phase2EndPositions = largePieces.map(p => p.position.clone());
+        }
+      }
+
+      // Phase 3 — Hovering with slow random rotations (no position drift)
+      if (phase.id === 3) {
+        const t = phaseProgress(g, phase.start, phase.end); // not used to change base positions
+        largeGroup.visible = true; miniGroup.visible = false;
+
+        // Strict handover: anchor from Phase 2 end on entry and set random axes/speeds
+        if (!phase3Prepared) {
+          // If available, use exact Phase 2 end snapshot; otherwise fallback to current
+          phase3FromPositions = (phase2EndPositions.length ? phase2EndPositions : largePieces.map(p => p.position.clone())).map(v=>v.clone());
+          phase3FromScale = largeGroup.scale.x;
+          phase3BaseRotations = largePieces.map(p => p.quaternion.clone());
+          phase3Axes = largePieces.map(() => new THREE.Vector3(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1).normalize());
+          phase3Speeds = largePieces.map(() => THREE.MathUtils.lerp(0.05, 0.15, Math.random()));
+          phase3StartTime = perf.now * 0.001;
+          phase3Prepared = true;
+        }
+
+        const time = Math.max(0, (perf.now * 0.001) - phase3StartTime);
+        const t3 = easeInOut(phaseProgress(g, PHASES[2].start, PHASES[2].end));
+        largePieces.forEach((p, i) => {
+          // Position: base + gentle vertical hover
+          const base = phase3FromPositions[i] || p.position.clone();
+          const hover = Math.sin(time * PHASE3_HOVER_FREQ + i * 0.21) * PHASE3_HOVER_AMP;
+          p.position.set(base.x, base.y + hover, base.z);
+          if (p.material) {
+            if (p.material.color) p.material.color.set(0x00f0ff);
+            p.material.transparent = true;
+            p.material.opacity = THREE.MathUtils.lerp(1.0, 0.8, t3); // fade 20% over Phase 3
+          }
+
+          // Rotation: base rotation * axis-angle(time * speed)
+          const axis = phase3Axes[i];
+          const speed = phase3Speeds[i];
+          const q = new THREE.Quaternion().setFromAxisAngle(axis, time * speed);
+          p.quaternion.copy(phase3BaseRotations[i]).multiply(q);
+        });
+
+        // Keep group scale unchanged in Phase 3
+        largeGroup.scale.setScalar(phase3FromScale);
+      }
+
+      // Phase 4 — Rubik Transform (reveal 729 mini cubes)
+      if (phase.id === 4) {
+        const t = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = true; miniGroup.visible = true; frameGroup.visible = false; coreSphere.visible = false; if (typeof coreLight !== 'undefined') coreLight.visible = false;
+
+        // Prepare anchors once from Phase 3 rendered state (positions include current hover)
+        // This guarantees minis originate exactly where the visible large cubes are at transition time
+        if (!phase4Prepared) {
+          phase4FromLargePositions = largePieces.map(p => p.getWorldPosition(new THREE.Vector3()));
+          phase4FromLargeQuats = largePieces.map(p => p.getWorldQuaternion(new THREE.Quaternion()));
+          // Reset minis to a clean baseline (no elongation/rotation from later phases)
+          miniCubes.forEach((m) => {
+            m.quaternion.identity();
+            m.rotation.set(0,0,0);
+            const s0 = (m.userData && typeof m.userData.initialScale === 'number') ? m.userData.initialScale : 0.0001;
+            m.scale.setScalar(s0);
+          });
+          phase4Prepared = true;
+        }
+
+        // Fade large pieces out while minis grow into oriented local grids around each large piece's current pose
+        largePieces.forEach((p) => {
+          const fade = 1 - t;
+          if (p.material) {
+            p.material.transparent = true;
+            p.material.opacity = THREE.MathUtils.lerp(0.6, 0.0, t);
+            p.material.depthWrite = false;
+          }
+          p.traverse(o => {
+            if (o.isLineSegments && o.material) {
+              o.material.transparent = true;
+              o.material.opacity = THREE.MathUtils.lerp(0.5, 0.0, t);
+              o.material.depthWrite = false;
+            }
+          });
+          p.scale.setScalar(Math.max(0.001, 1 - t));
+        });
+
+        miniCubes.forEach((m) => {
+          const ownerIndex = (m.userData && typeof m.userData.ownerIndex === 'number') ? m.userData.ownerIndex : 0;
+          const lp = largePieces[ownerIndex];
+          const origin = phase4FromLargePositions[ownerIndex] || (lp ? lp.getWorldPosition(new THREE.Vector3()) : new THREE.Vector3());
+          const quat = phase4FromLargeQuats[ownerIndex] || (lp ? lp.getWorldQuaternion(new THREE.Quaternion()) : new THREE.Quaternion());
+          const local = m.userData.local || new THREE.Vector3();
+          const offset = new THREE.Vector3(local.x * MINI_STEP, local.y * MINI_STEP, local.z * MINI_STEP).applyQuaternion(quat);
+          const target = origin.clone().add(offset);
+          const pos = origin.clone().lerp(target, t);
+          m.position.copy(pos);
+          const s = lerp(m.userData.initialScale, 1, t);
+          m.scale.setScalar(s);
+        });
+        // Ensure the large cubes fully disappear at the end of Phase 4
+        largeGroup.visible = t < 0.98;
+      }
+
+      // Phase 5 — Expand to 43.3% (retain Phase 4 color/state)
+      if (phase.id === 5) {
+        const t5 = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = false; miniGroup.visible = true; frameGroup.visible = false; coreSphere.visible = false; if (typeof coreLight !== 'undefined') coreLight.visible = false;
+        if (!phase5Prepared) {
+          phase5StartPositions = miniCubes.map(m => m.getWorldPosition(new THREE.Vector3()));
+          phase5Dirs = miniCubes.map((m) => {
+            const b = m.userData.base || new THREE.Vector3();
+            const v = new THREE.Vector3(b.x, b.y, b.z).normalize();
+            if (v.lengthSq() === 0) v.set(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1).normalize();
+            return v;
+          });
+          phase5Prepared = true;
+        }
+        const R = cloudRadiusForMini();
+        const up = new THREE.Vector3(0,1,0);
+        miniCubes.forEach((m, idx) => {
+          const start = phase5StartPositions[idx];
+          const dir = phase5Dirs[idx];
+          const cloud = dir.clone().multiplyScalar(R);
+          const pos = start.clone().lerp(cloud, 0.433 * t5);
+          // Tiny hover for life, but largely static
+          const hover = Math.sin(perf.now * 0.001 + idx * 0.13) * 0.02;
+          m.position.lerp(pos.clone().addScaledVector(up, hover), 0.5);
+        });
+      }
+
+      // Phase 6 — Popcorn recolor to purple at same positions
+      if (phase.id === 6) {
+        const t6 = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = false; miniGroup.visible = true; frameGroup.visible = false; coreSphere.visible = false; if (typeof coreLight !== 'undefined') coreLight.visible = false;
+        if (!phase6Prepared) {
+          // Anchor positions from Phase 5 end
+          phase6AnchorPositions = miniCubes.map(m => m.getWorldPosition(new THREE.Vector3()));
+          // Build random sequential order
+          phase6ColorOrder = [...miniCubes.keys()];
+          for (let i = phase6ColorOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [phase6ColorOrder[i], phase6ColorOrder[j]] = [phase6ColorOrder[j], phase6ColorOrder[i]];
+          }
+          // Activation thresholds: first 15 spread slowly, then accelerate
+          const N = miniCubes.length;
+          const first = 15;
+          phase6Activation = new Array(N).fill(0);
+          for (let rank = 0; rank < N; rank++) {
+            const idx = phase6ColorOrder[rank];
+            if (rank < first) {
+              phase6Activation[idx] = Math.min(1, rank * 0.02); // slow start up to ~0.28
+            } else {
+              const r = (rank - first) / (N - first);
+              phase6Activation[idx] = 0.28 + r * r * (1 - 0.28); // accelerate
+            }
+          }
+          phase6Prepared = true;
+        }
+        const fromColor = new THREE.Color(0x00f0ff);
+        const toColor = new THREE.Color(0x7c3aed);
+        const up = new THREE.Vector3(0,1,0);
+        miniCubes.forEach((m, idx) => {
+          // Hold position
+          const pos = phase6AnchorPositions[idx];
+          const hover = Math.sin(perf.now * 0.001 + idx * 0.13) * 0.015;
+          m.position.lerp(pos.clone().addScaledVector(up, hover), 0.6);
+          // Popcorn color change
+          const a = phase6Activation[idx];
+          const p = clamp((t6 - a) / 0.08, 0, 1); // per-cube transition window
+          m.traverse(o => {
+            if (o.isMesh && o.material && o.material.color) {
+              o.material.color = o.material.color || new THREE.Color();
+              o.material.color.lerpColors(fromColor, toColor, p);
+            }
+          });
+        });
+      }
+
+      // Phase 7 — Dance (swirl/orbit/hover)
+      if (phase.id === 7) {
+        const t7 = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = false; miniGroup.visible = true; frameGroup.visible = false; coreSphere.visible = false; if (typeof coreLight !== 'undefined') coreLight.visible = false;
+        if (!phase7Prepared) {
+          phase7StartPositions = miniCubes.map(m => m.getWorldPosition(new THREE.Vector3()));
+          phase7Dirs = miniCubes.map((m) => {
+            const b = m.userData.base || new THREE.Vector3();
+            const v = new THREE.Vector3(b.x, b.y, b.z).normalize();
+            if (v.lengthSq() === 0) v.set(Math.random()*2-1, Math.random()*2-1, Math.random()*2-1).normalize();
+            return v;
+          });
+          phase7Swirl = miniCubes.map(() => Math.random() * Math.PI * 2);
+          phase7Prepared = true;
+        }
+        const R = cloudRadiusForMini();
+        const up = new THREE.Vector3(0,1,0);
+        miniCubes.forEach((m, idx) => {
+          const base = phase7StartPositions[idx];
+          const dir = phase7Dirs[idx];
+          const anchor = dir.clone().multiplyScalar(R * 0.95);
+          const angle = (perf.now * 0.001) + phase7Swirl[idx];
+          const tangent = dir.clone().cross(up).normalize();
+          const binorm = dir.clone().cross(tangent).normalize();
+          const swirlRadius = MINI_STEP * 2.0;
+          const swirlOffset = tangent.multiplyScalar(Math.cos(angle) * swirlRadius).add(binorm.multiplyScalar(Math.sin(angle) * swirlRadius));
+          const pos = anchor.clone().add(swirlOffset);
+          const hover = Math.sin(perf.now * 0.0012 + idx * 0.17) * 0.06;
+          m.position.lerp(pos.clone().addScaledVector(up, hover), 0.6);
+          m.rotation.x += 0.004;
+          m.rotation.y -= 0.003;
+        });
+      }
+
+      // Phase 8 — Morph to final spherical sculpture (same size as Phase 1 frame), keep purple
+      if (phase.id === 8) {
+        const t8 = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = false; miniGroup.visible = true; frameGroup.visible = true; coreSphere.visible = true; coreLight.visible = true;
+        if (!phase8Prepared) {
+          phase8StartPositions = miniCubes.map(m => m.getWorldPosition(new THREE.Vector3()));
+          phase8Prepared = true;
+        }
+        miniCubes.forEach((m, idx) => {
+          const from = phase8StartPositions[idx];
+          const to = sculpturePos[idx];
+          const pos = from.clone().lerp(to, t8);
+          m.position.lerp(pos, 0.6);
+          // orient toward normal and elongate along it
+          const targetQ = sculptureQuat[idx];
+          m.quaternion.slerp(targetQ, 0.6 * t8);
+          const targetS = sculptureScale[idx];
+          m.scale.lerp(targetS, 0.4);
+        });
+      }
+
+      // Phase 9 — Final Formation (purple fills, mouse rotation enabled), show frame + core
+      if (phase.id === 9) {
+        const t = easeInOut(phaseProgress(g, phase.start, phase.end));
+        largeGroup.visible = false; miniGroup.visible = true; frameGroup.visible = true; coreSphere.visible = true; coreLight.visible = true;
+        if (mouseLabelEl) mouseLabelEl.style.display = 'inline-block';
+
+        const float = Math.sin(perf.now * 0.0012) * (PHASE1_SPAN * 0.025);
+        frameGroup.position.y = float * 0.25; coreSphere.position.y = float * 0.5;
+        miniCubes.forEach((m, idx) => {
+          const ft = sculpturePos[idx];
+          m.position.lerp(ft, 0.2);
+          m.quaternion.slerp(sculptureQuat[idx], 0.15);
+          m.scale.lerp(sculptureScale[idx], 0.15);
+        });
+        // purple fills only
+        setCubeFillColor(miniGroup, 0x7c3aed);
+      } else if (phase.id === 4 || phase.id === 5) {
+        // During transform and expand, match minis to large cube color
+        setCubeFillColor(miniGroup, 0x00f0ff);
+      } else if (phase.id === 6 || phase.id === 7 || phase.id === 8) {
+        // Carry over per-cube colors from prior phase; no global override
+      } else {
+        // other phases: neutral fill while preserving white edges
+        setCubeFillColor(miniGroup, 0x1f2937);
+        frameGroup.visible = false; coreSphere.visible = false; if (typeof coreLight !== 'undefined') coreLight.visible = false;
+      }
+
+      // Locking behavior: large pieces remain at their phase-end positions after Phase 2 completion (implicitly handled by continuous lerp to cloud target before transform)
+
+      // Mouse rotation mapping applied to root in Phase 1 and 9 only (UX supports reverse/forward scroll)
+      if (phase.id === 1 || phase.id === 9) {
+        root.rotation.x = THREE.MathUtils.damp(root.rotation.x, targetRot.x, 6, delta);
+        root.rotation.y = THREE.MathUtils.damp(root.rotation.y, targetRot.y, 6, delta);
+      } else {
+        // gently settle back toward neutral when not interactive
+        root.rotation.x = THREE.MathUtils.damp(root.rotation.x, 0, 2, delta);
+        root.rotation.y = THREE.MathUtils.damp(root.rotation.y, 0, 2, delta);
+      }
+
+      // Restore orientations when not in Phase 3 to avoid residual rotation on reverse scroll
+      if (phase.id !== 3 && phase3Prepared) {
+        largePieces.forEach((p, i) => {
+          if (phase3BaseRotations[i]) p.quaternion.copy(phase3BaseRotations[i]);
+        });
+      }
+
+      // Metrics
+      if (metricsEl) metricsEl.textContent = label;
+      updateCoords(phase.id);
+    }
+
+    // ===== Resize =====
+    function fitCameraToPhase1Bounds() {
+      const scale = 1.5;
+      const halfExtent = (STEP + LARGE_SIZE * 0.5) * scale;
+      const fov = THREE.MathUtils.degToRad(camera.fov * 0.5);
+      const rect = containerEl.getBoundingClientRect();
+      const aspect = Math.max(0.0001, rect.width / Math.max(1, rect.height));
+      const dVert = halfExtent / Math.tan(fov);
+      const dHoriz = (halfExtent / aspect) / Math.tan(fov);
+      let need = Math.max(dVert, dHoriz) * 1.8; // stronger margin to ensure full fit
+      const current = camera.position.length();
+      if (need < current) need = current; // never move closer than current distance
+      const dir = camera.position.clone().normalize();
+      camera.position.copy(dir.multiplyScalar(need));
+      camera.lookAt(0,0,0);
+    }
+
+    function layoutAndResize() {
+      const headerEl = document.querySelector('header');
+      const footerEl = document.querySelector('footer');
+      const topInset = headerEl ? headerEl.offsetHeight : 0;
+      const bottomInset = footerEl ? footerEl.offsetHeight : 0;
+      containerEl.style.top = topInset + 'px';
+      containerEl.style.bottom = bottomInset + 'px';
+
+      const rect = containerEl.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+      composer.setSize(w, h);
+      bloomPass.setSize(w, h);
+    }
+    window.addEventListener('resize', layoutAndResize);
+    layoutAndResize();
+
+    // ===== Render Loop =====
+    const clock = new THREE.Clock();
+    let delta = 0; let perf = { now: 0 };
+
+    function render() {
+      delta = clock.getDelta();
+      perf.now = performance.now();
+      const g = globalProgress();
+      applyPhases(g);
+
+      if (bloomEnabled) composer.render(); else renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    render();
+  </script>
+</body>
+</html>

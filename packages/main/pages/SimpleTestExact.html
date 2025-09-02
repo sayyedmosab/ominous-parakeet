@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test Page - Exact Copy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/index.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        #root {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .test-content {
+            height: 100%;
+            overflow-y: auto;
+            background: white;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="app-container">
+            <!-- EXACT HEADER HTML FROM LIVE SITE -->
+            <header class="shadow-md sticky top-0 z-50 text-white" style="background-color: rgb(0, 18, 45);"><div class="container mx-auto px-4 sm:px-6 lg:px-8"><div class="flex items-center justify-between h-20"><a class="flex items-center" href="#/" data-discover="true"><img alt="AI Twin Tech" class="h-12 w-auto" src="/images/aittlogo.png"></a><div class="hidden md:flex items-center space-x-8"><nav class="flex items-center space-x-6"><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-electric-blue-400 font-semibold" href="#/" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house w-4 h-4" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Home</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/about" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open w-4 h-4" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>About</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/roadmap" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target w-4 h-4" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>Roadmap</a></div><div class="relative group"><a class="py-2 flex items-center gap-2 transition-colors duration-300 text-gray-300 hover:text-electric-blue-400" href="#/forum" data-discover="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square w-4 h-4" aria-hidden="true"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path></svg>Architect's Forum</a></div></nav><div class="flex items-center space-x-4"><button class="flex items-center gap-1 px-3 py-1.5 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 transition-all duration-300 text-sm">EN</button></div></div><div class="md:hidden"><button class="text-gray-200 focus:outline-none"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-6 h-6" aria-hidden="true"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg></button></div></div></div></header>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="main-content">
+                <div class="test-content">
+                    <h2>MIDDLE FRAME - Scrollable Content</h2>
+                    <div style="font-family: monospace; font-size: 12px; line-height: 1.4;">
+                        <!-- Add lots of content to make it scrollable -->
+                        <p>Line 1: This is test content for scrolling</p>
+                        <p>Line 2: This is test content for scrolling</p>
+                        <p>Line 3: This is test content for scrolling</p>
+                        <p>Line 4: This is test content for scrolling</p>
+                        <p>Line 5: This is test content for scrolling</p>
+                        <p>Line 6: This is test content for scrolling</p>
+                        <p>Line 7: This is test content for scrolling</p>
+                        <p>Line 8: This is test content for scrolling</p>
+                        <p>Line 9: This is test content for scrolling</p>
+                        <p>Line 10: This is test content for scrolling</p>
+                        <p>Line 11: This is test content for scrolling</p>
+                        <p>Line 12: This is test content for scrolling</p>
+                        <p>Line 13: This is test content for scrolling</p>
+                        <p>Line 14: This is test content for scrolling</p>
+                        <p>Line 15: This is test content for scrolling</p>
+                        <p>Line 16: This is test content for scrolling</p>
+                        <p>Line 17: This is test content for scrolling</p>
+                        <p>Line 18: This is test content for scrolling</p>
+                        <p>Line 19: This is test content for scrolling</p>
+                        <p>Line 20: This is test content for scrolling</p>
+                        <p>Line 21: This is test content for scrolling</p>
+                        <p>Line 22: This is test content for scrolling</p>
+                        <p>Line 23: This is test content for scrolling</p>
+                        <p>Line 24: This is test content for scrolling</p>
+                        <p>Line 25: This is test content for scrolling</p>
+                        <p>Line 26: This is test content for scrolling</p>
+                        <p>Line 27: This is test content for scrolling</p>
+                        <p>Line 28: This is test content for scrolling</p>
+                        <p>Line 29: This is test content for scrolling</p>
+                        <p>Line 30: This is test content for scrolling</p>
+                        <p>Line 31: This is test content for scrolling</p>
+                        <p>Line 32: This is test content for scrolling</p>
+                        <p>Line 33: This is test content for scrolling</p>
+                        <p>Line 34: This is test content for scrolling</p>
+                        <p>Line 35: This is test content for scrolling</p>
+                        <p>Line 36: This is test content for scrolling</p>
+                        <p>Line 37: This is test content for scrolling</p>
+                        <p>Line 38: This is test content for scrolling</p>
+                        <p>Line 39: This is test content for scrolling</p>
+                        <p>Line 40: This is test content for scrolling</p>
+                        <p>Line 41: This is test content for scrolling</p>
+                        <p>Line 42: This is test content for scrolling</p>
+                        <p>Line 43: This is test content for scrolling</p>
+                        <p>Line 44: This is test content for scrolling</p>
+                        <p>Line 45: This is test content for scrolling</p>
+                        <p>Line 46: This is test content for scrolling</p>
+                        <p>Line 47: This is test content for scrolling</p>
+                        <p>Line 48: This is test content for scrolling</p>
+                        <p>Line 49: This is test content for scrolling</p>
+                        <p>Line 50: This is test content for scrolling</p>
+                        <p>Line 51: This is test content for scrolling</p>
+                        <p>Line 52: This is test content for scrolling</p>
+                        <p>Line 53: This is test content for scrolling</p>
+                        <p>Line 54: This is test content for scrolling</p>
+                        <p>Line 55: This is test content for scrolling</p>
+                        <p>Line 56: This is test content for scrolling</p>
+                        <p>Line 57: This is test content for scrolling</p>
+                        <p>Line 58: This is test content for scrolling</p>
+                        <p>Line 59: This is test content for scrolling</p>
+                        <p>Line 60: This is test content for scrolling</p>
+                        <p>Line 61: This is test content for scrolling</p>
+                        <p>Line 62: This is test content for scrolling</p>
+                        <p>Line 63: This is test content for scrolling</p>
+                        <p>Line 64: This is test content for scrolling</p>
+                        <p>Line 65: This is test content for scrolling</p>
+                        <p>Line 66: This is test content for scrolling</p>
+                        <p>Line 67: This is test content for scrolling</p>
+                        <p>Line 68: This is test content for scrolling</p>
+                        <p>Line 69: This is test content for scrolling</p>
+                        <p>Line 70: This is test content for scrolling</p>
+                        <p>Line 71: This is test content for scrolling</p>
+                        <p>Line 72: This is test content for scrolling</p>
+                        <p>Line 73: This is test content for scrolling</p>
+                        <p>Line 74: This is test content for scrolling</p>
+                        <p>Line 75: This is test content for scrolling</p>
+                        <p>Line 76: This is test content for scrolling</p>
+                        <p>Line 77: This is test content for scrolling</p>
+                        <p>Line 78: This is test content for scrolling</p>
+                        <p>Line 79: This is test content for scrolling</p>
+                        <p>Line 80: This is test content for scrolling</p>
+                        <p>Line 81: This is test content for scrolling</p>
+                        <p>Line 82: This is test content for scrolling</p>
+                        <p>Line 83: This is test content for scrolling</p>
+                        <p>Line 84: This is test content for scrolling</p>
+                        <p>Line 85: This is test content for scrolling</p>
+                        <p>Line 86: This is test content for scrolling</p>
+                        <p>Line 87: This is test content for scrolling</p>
+                        <p>Line 88: This is test content for scrolling</p>
+                        <p>Line 89: This is test content for scrolling</p>
+                        <p>Line 90: This is test content for scrolling</p>
+                        <p>Line 91: This is test content for scrolling</p>
+                        <p>Line 92: This is test content for scrolling</p>
+                        <p>Line 93: This is test content for scrolling</p>
+                        <p>Line 94: This is test content for scrolling</p>
+                        <p>Line 95: This is test content for scrolling</p>
+                        <p>Line 96: This is test content for scrolling</p>
+                        <p>Line 97: This is test content for scrolling</p>
+                        <p>Line 98: This is test content for scrolling</p>
+                        <p>Line 99: This is test content for scrolling</p>
+                        <p>Line 100: This is test content for scrolling</p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- EXACT FOOTER HTML FROM LIVE SITE -->
+            <footer class="bg-gray-800 text-white mt-auto"><div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6"><div class="flex flex-col md:flex-row justify-between items-center text-center md:text-left"><p class="text-gray-400 text-sm mb-4 md:mb-0 flex items-center gap-1">© 2025 AI Twin Tech. All rights reserved. - Built with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart w-4 h-4 text-red-500" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg> by SketchApp.</p><div class="flex items-center"><a href="#" class="flex items-center gap-2 text-white font-semibold hover:text-electric-blue-400 transition-colors duration-300"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle w-5 h-5" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path></svg>Let's Chat (Introvert Friendly)</a></div></div></div></footer>
+        </div>
+    </div>
+</body>
+</html>
